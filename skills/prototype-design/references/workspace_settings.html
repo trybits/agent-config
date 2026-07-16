@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>工作区设置</title>
+    <link rel="stylesheet" href="./common.css" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+      .settings-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 2.3fr) minmax(280px, 1fr);
+        gap: 14px;
+      }
+
+      .logo-upload {
+        width: 92px;
+        height: 92px;
+        border-radius: var(--radius-xl);
+        border: 1px dashed var(--border);
+        background: linear-gradient(135deg, rgba(0, 100, 255, 0.08), rgba(0, 100, 255, 0.02));
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        color: var(--text-secondary);
+        font-size: 12px;
+      }
+
+      .logo-upload .nav-icon {
+        width: 18px;
+        height: 18px;
+      }
+
+      .switch-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .switch-main {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .switch-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      .switch-desc {
+        font-size: 12px;
+        color: var(--text-secondary);
+      }
+
+      .checklist {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .checklist li {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        font-size: 13px;
+        color: var(--text-secondary);
+      }
+
+      .checklist i {
+        width: 15px;
+        height: 15px;
+        margin-top: 2px;
+        color: var(--success);
+      }
+
+      .danger-box {
+        border: 1px solid rgba(245, 63, 63, 0.22);
+        background: rgba(245, 63, 63, 0.05);
+        border-radius: var(--radius-md);
+        padding: 12px;
+      }
+
+      @media (max-width: 1160px) {
+        .settings-layout {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <h1>EZ-PROTOTYPE</h1>
+          <p>数字工坊</p>
+        </div>
+        <nav class="nav">
+          <section class="nav-group">
+            <p class="nav-group-title">概览</p>
+            <a class="nav-item" href="#"><i data-lucide="layout-dashboard" class="nav-icon"></i>仪表盘</a>
+          </section>
+          <section class="nav-group">
+            <p class="nav-group-title">销售运营</p>
+            <a class="nav-item" href="#"><i data-lucide="users" class="nav-icon"></i>客户</a>
+            <a class="nav-item" href="#"><i data-lucide="user-plus" class="nav-icon"></i>线索</a>
+            <a class="nav-item" href="#"><i data-lucide="briefcase" class="nav-icon"></i>商机</a>
+          </section>
+          <section class="nav-group">
+            <p class="nav-group-title">系统</p>
+            <a class="nav-item is-active" href="#"><i data-lucide="settings" class="nav-icon"></i>工作区设置</a>
+            <a class="nav-item" href="#"><i data-lucide="shield-check" class="nav-icon"></i>安全中心</a>
+          </section>
+        </nav>
+      </aside>
+
+      <div class="main">
+        <header class="topbar">
+          <div class="topbar-left">
+            <button class="icon-btn" type="button" data-sidebar-toggle aria-label="收起侧边栏" aria-expanded="true" title="收起侧边栏">
+              <i data-lucide="panel-left" class="nav-icon"></i>
+            </button>
+            <nav class="breadcrumb" aria-label="面包屑">
+              <ol class="breadcrumb-list">
+                <li class="breadcrumb-item"><a class="breadcrumb-link" href="#">首页</a></li>
+                <li class="breadcrumb-sep" aria-hidden="true">/</li>
+                <li class="breadcrumb-item"><a class="breadcrumb-link" href="#">系统</a></li>
+                <li class="breadcrumb-sep" aria-hidden="true">/</li>
+                <li class="breadcrumb-item"><span class="breadcrumb-page" aria-current="page">工作区设置</span></li>
+              </ol>
+            </nav>
+          </div>
+          <div class="topbar-right">
+            <div class="user-chip">
+              <span class="avatar">周</span>
+              <span>周嘉言</span>
+            </div>
+          </div>
+        </header>
+
+        <main class="content stack" style="gap: 16px">
+          <section class="row between" style="flex-wrap: wrap; gap: 14px">
+            <div>
+              <h2 class="page-title">工作区设置</h2>
+              <p class="page-subtitle">维护组织信息、品牌视觉与安全策略，适用于多团队协作场景。</p>
+            </div>
+            <div class="row">
+              <button class="btn btn-outline" type="button">取消更改</button>
+              <button class="btn btn-primary" type="button">保存设置</button>
+            </div>
+          </section>
+
+          <section class="settings-layout">
+            <form class="card">
+              <section class="section stack">
+                <div class="row between">
+                  <h3 class="card-title">基本信息</h3>
+                  <span class="badge neutral">Workspace</span>
+                </div>
+                <div class="form-grid cols-2">
+                  <div>
+                    <label class="label" for="workspace-name">工作区名称</label>
+                    <input id="workspace-name" class="input" type="text" value="EZ-PROTOTYPE - APAC" />
+                  </div>
+                  <div>
+                    <label class="label" for="workspace-slug">访问标识</label>
+                    <input id="workspace-slug" class="input" type="text" value="exec-crm-apac" />
+                  </div>
+                  <div>
+                    <label class="label" for="timezone">时区</label>
+                    <input id="timezone" class="input" type="text" value="Asia/Shanghai (GMT+8)" />
+                  </div>
+                  <div>
+                    <label class="label" for="lang">默认语言</label>
+                    <div class="select-wrap" data-select data-value="zh">
+                      <button class="select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false">简体中文</button>
+                      <div class="select-content" role="listbox">
+                        <div class="select-label">语言</div>
+                        <div class="select-item is-selected" data-value="zh">
+                          <span class="select-item-label">简体中文</span>
+                          <span class="select-check">✓</span>
+                        </div>
+                        <div class="select-item" data-value="en">
+                          <span class="select-item-label">English</span>
+                          <span class="select-check" hidden>✓</span>
+                        </div>
+                        <div class="select-item" data-value="ja">
+                          <span class="select-item-label">日本語</span>
+                          <span class="select-check" hidden>✓</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <section class="section stack">
+                <div class="row between">
+                  <h3 class="card-title">品牌设置</h3>
+                  <span class="badge neutral">Brand</span>
+                </div>
+                <div class="row" style="align-items: flex-start">
+                  <div class="logo-upload" role="button" tabindex="0" aria-label="上传工作区标志">
+                    <i data-lucide="image-up" class="nav-icon"></i>
+                    <span>上传 Logo</span>
+                  </div>
+                  <div class="stack" style="flex: 1; gap: 10px">
+                    <div class="form-grid cols-2">
+                      <div>
+                        <label class="label" for="brand-primary">主色</label>
+                        <input id="brand-primary" class="input" type="text" value="#0064FF" />
+                      </div>
+                      <div>
+                        <label class="label" for="brand-font">标题字体</label>
+                        <input id="brand-font" class="input" type="text" value="Geist Variable" />
+                      </div>
+                    </div>
+                    <textarea class="textarea" placeholder="品牌描述（可选）">适用于企业销售运营与客户管理，强调稳定、专业和高效率。</textarea>
+                  </div>
+                </div>
+              </section>
+
+              <section class="section stack">
+                <div class="row between">
+                  <h3 class="card-title">安全策略</h3>
+                  <span class="badge neutral">Security</span>
+                </div>
+
+                <div class="stack">
+                  <div class="switch-row">
+                    <div class="switch-main">
+                      <span class="switch-title">强制 SSO 登录</span>
+                      <span class="switch-desc">开启后仅允许企业身份提供商登录</span>
+                    </div>
+                    <span class="ui-switch is-checked" role="switch" aria-checked="true" aria-label="强制 SSO 登录"></span>
+                  </div>
+
+                  <div class="switch-row">
+                    <div class="switch-main">
+                      <span class="switch-title">强制双重验证</span>
+                      <span class="switch-desc">成员首次登录后需要绑定二次验证</span>
+                    </div>
+                    <span class="ui-switch is-checked" role="switch" aria-checked="true" aria-label="强制双重验证"></span>
+                  </div>
+
+                  <div class="form-grid cols-2">
+                    <div>
+                      <label class="label" for="session-timeout">会话超时</label>
+                      <div class="select-wrap" data-select data-value="8">
+                        <button class="select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false">8 小时</button>
+                        <div class="select-content" role="listbox">
+                          <div class="select-label">会话超时</div>
+                          <div class="select-item is-selected" data-value="8">
+                            <span class="select-item-label">8 小时</span>
+                            <span class="select-check">✓</span>
+                          </div>
+                          <div class="select-item" data-value="4">
+                            <span class="select-item-label">4 小时</span>
+                            <span class="select-check" hidden>✓</span>
+                          </div>
+                          <div class="select-item" data-value="24">
+                            <span class="select-item-label">24 小时</span>
+                            <span class="select-check" hidden>✓</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <label class="label" for="audit-retention">审计日志保留</label>
+                      <input id="audit-retention" class="input" type="text" value="180 天" />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label class="label" for="ip-allowlist">IP 白名单（每行一个网段）</label>
+                    <textarea id="ip-allowlist" class="textarea">203.0.113.10/32
+198.51.100.0/24</textarea>
+                  </div>
+                </div>
+              </section>
+            </form>
+
+            <aside class="stack">
+              <article class="card card-body stack" style="gap: 10px">
+                <h3 class="card-title">配置完成度</h3>
+                <strong style="font-size: 24px">82%</strong>
+                <div class="progress"><span style="width: 82%"></span></div>
+                <p class="card-desc">建议补全 IP 白名单和备用管理员。</p>
+              </article>
+
+              <article class="card card-body">
+                <h3 class="card-title">上线前检查</h3>
+                <ul class="checklist" style="margin-top: 10px">
+                  <li><i data-lucide="check-circle-2"></i><span>SSO 已绑定企业身份源</span></li>
+                  <li><i data-lucide="check-circle-2"></i><span>品牌 Logo 与域名已同步</span></li>
+                  <li><i data-lucide="check-circle-2"></i><span>审计日志周期符合合规要求</span></li>
+                </ul>
+              </article>
+
+              <article class="card card-body stack" style="gap: 10px">
+                <h3 class="card-title">危险操作区</h3>
+                <p class="table-total-rows">停用工作区会立即阻断所有用户访问，请谨慎操作。</p>
+                <button class="btn" style="border-color: rgba(245, 63, 63, 0.32); color: var(--destructive)" type="button">停用工作区</button>
+              </article>
+            </aside>
+          </section>
+        </main>
+      </div>
+    </div>
+    <script>
+      lucide.createIcons();
+    </script>
+    <script src="./common.js"></script>
+  </body>
+</html>

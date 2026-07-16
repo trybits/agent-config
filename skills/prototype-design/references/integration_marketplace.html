@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>集成中心</title>
+    <link rel="stylesheet" href="./common.css" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+      .toolbar {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr auto;
+        gap: 12px;
+        align-items: end;
+      }
+
+      .integration-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .integration-card {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .integration-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .integration-logo {
+        width: 34px;
+        height: 34px;
+        border-radius: 9px;
+        background: rgba(0, 100, 255, 0.1);
+        color: var(--primary);
+        font-size: 12px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .integration-meta {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .integration-meta h4 {
+        margin: 0;
+        font-size: 15px;
+      }
+
+      .integration-desc {
+        color: var(--text-secondary);
+        font-size: 13px;
+        line-height: 1.55;
+        margin-top: 8px;
+      }
+
+      .integration-foot {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .event-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .event-option {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-md);
+        padding: 9px 10px;
+        font-size: 13px;
+        color: var(--text-secondary);
+      }
+
+      .event-option input {
+        margin: 0;
+      }
+
+      .status-pills {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      @media (max-width: 1240px) {
+        .integration-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 980px) {
+        .toolbar {
+          grid-template-columns: 1fr;
+        }
+
+        .integration-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .event-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <h1>EZ-PROTOTYPE</h1>
+          <p>数字工坊</p>
+        </div>
+        <nav class="nav">
+          <section class="nav-group">
+            <p class="nav-group-title">概览</p>
+            <a class="nav-item" href="#"><i data-lucide="layout-dashboard" class="nav-icon"></i>仪表盘</a>
+          </section>
+          <section class="nav-group">
+            <p class="nav-group-title">销售运营</p>
+            <a class="nav-item" href="#"><i data-lucide="users" class="nav-icon"></i>客户</a>
+            <a class="nav-item" href="#"><i data-lucide="user-plus" class="nav-icon"></i>线索</a>
+            <a class="nav-item" href="#"><i data-lucide="briefcase" class="nav-icon"></i>商机</a>
+          </section>
+          <section class="nav-group">
+            <p class="nav-group-title">系统</p>
+            <a class="nav-item is-active" href="#"><i data-lucide="plug-zap" class="nav-icon"></i>集成中心</a>
+            <a class="nav-item" href="#"><i data-lucide="settings" class="nav-icon"></i>设置</a>
+          </section>
+        </nav>
+      </aside>
+
+      <div class="main">
+        <header class="topbar">
+          <div class="topbar-left">
+            <button class="icon-btn" type="button" data-sidebar-toggle aria-label="收起侧边栏" aria-expanded="true" title="收起侧边栏">
+              <i data-lucide="panel-left" class="nav-icon"></i>
+            </button>
+            <nav class="breadcrumb" aria-label="面包屑">
+              <ol class="breadcrumb-list">
+                <li class="breadcrumb-item"><a class="breadcrumb-link" href="#">首页</a></li>
+                <li class="breadcrumb-sep" aria-hidden="true">/</li>
+                <li class="breadcrumb-item"><a class="breadcrumb-link" href="#">系统</a></li>
+                <li class="breadcrumb-sep" aria-hidden="true">/</li>
+                <li class="breadcrumb-item"><span class="breadcrumb-page" aria-current="page">集成中心</span></li>
+              </ol>
+            </nav>
+          </div>
+          <div class="topbar-right">
+            <div class="user-chip">
+              <span class="avatar">周</span>
+              <span>周嘉言</span>
+            </div>
+          </div>
+        </header>
+
+        <main class="content stack" style="gap: 16px">
+          <section class="row between" style="flex-wrap: wrap; gap: 14px">
+            <div>
+              <h2 class="page-title">集成中心</h2>
+              <p class="page-subtitle">统一连接消息、数据和任务系统，减少跨平台切换成本。</p>
+            </div>
+            <div class="status-pills">
+              <span class="badge success">已连接 6</span>
+              <span class="badge neutral">可用 24</span>
+            </div>
+          </section>
+
+          <section class="toolbar">
+            <div>
+              <label class="label" for="integration-search">搜索集成</label>
+              <input id="integration-search" class="input" type="text" placeholder="Slack, Notion, HubSpot..." />
+            </div>
+            <div>
+              <label class="label" for="integration-category">分类</label>
+              <div class="select-wrap" data-select data-value="all">
+                <button class="select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false">全部分类</button>
+                <div class="select-content" role="listbox">
+                  <div class="select-label">分类</div>
+                  <div class="select-item is-selected" data-value="all">
+                    <span class="select-item-label">全部分类</span>
+                    <span class="select-check">✓</span>
+                  </div>
+                  <div class="select-item" data-value="message">
+                    <span class="select-item-label">消息通知</span>
+                    <span class="select-check" hidden>✓</span>
+                  </div>
+                  <div class="select-item" data-value="crm">
+                    <span class="select-item-label">CRM/销售</span>
+                    <span class="select-check" hidden>✓</span>
+                  </div>
+                  <div class="select-item" data-value="data">
+                    <span class="select-item-label">数据仓库</span>
+                    <span class="select-check" hidden>✓</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <label class="label" for="integration-status">状态</label>
+              <div class="select-wrap" data-select data-value="connected">
+                <button class="select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false">已连接</button>
+                <div class="select-content" role="listbox">
+                  <div class="select-label">状态</div>
+                  <div class="select-item is-selected" data-value="connected">
+                    <span class="select-item-label">已连接</span>
+                    <span class="select-check">✓</span>
+                  </div>
+                  <div class="select-item" data-value="available">
+                    <span class="select-item-label">未连接</span>
+                    <span class="select-check" hidden>✓</span>
+                  </div>
+                  <div class="select-item" data-value="failed">
+                    <span class="select-item-label">连接异常</span>
+                    <span class="select-check" hidden>✓</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button class="btn btn-outline" type="button">筛选</button>
+          </section>
+
+          <section class="integration-grid">
+            <article class="card card-body integration-card">
+              <div>
+                <div class="integration-head">
+                  <div class="integration-meta">
+                    <span class="integration-logo">SL</span>
+                    <div>
+                      <h4>Slack</h4>
+                      <p class="card-desc">消息通知</p>
+                    </div>
+                  </div>
+                  <span class="badge success">已连接</span>
+                </div>
+                <p class="integration-desc">将线索变更、审批提醒和异常告警发送到团队频道，支持 @成员 规则。</p>
+              </div>
+              <div class="integration-foot">
+                <small style="color: var(--text-hint)">最近同步：今天 10:12</small>
+                <button class="btn btn-outline" type="button">管理</button>
+              </div>
+            </article>
+
+            <article class="card card-body integration-card">
+              <div>
+                <div class="integration-head">
+                  <div class="integration-meta">
+                    <span class="integration-logo">NT</span>
+                    <div>
+                      <h4>Notion</h4>
+                      <p class="card-desc">知识协作</p>
+                    </div>
+                  </div>
+                  <span class="badge warning">待授权</span>
+                </div>
+                <p class="integration-desc">自动归档客户访谈摘要、周报与项目节点，保持知识库结构一致。</p>
+              </div>
+              <div class="integration-foot">
+                <small style="color: var(--text-hint)">尚未完成 OAuth 授权</small>
+                <button class="btn btn-primary" type="button">连接</button>
+              </div>
+            </article>
+
+            <article class="card card-body integration-card">
+              <div>
+                <div class="integration-head">
+                  <div class="integration-meta">
+                    <span class="integration-logo">HB</span>
+                    <div>
+                      <h4>HubSpot</h4>
+                      <p class="card-desc">CRM</p>
+                    </div>
+                  </div>
+                  <span class="badge neutral">只读</span>
+                </div>
+                <p class="integration-desc">同步联系人和公司实体，可按来源区分主系统与镜像系统的数据写入权限。</p>
+              </div>
+              <div class="integration-foot">
+                <small style="color: var(--text-hint)">最近同步：今天 08:06</small>
+                <button class="btn btn-outline" type="button">配置</button>
+              </div>
+            </article>
+
+            <article class="card card-body integration-card">
+              <div>
+                <div class="integration-head">
+                  <div class="integration-meta">
+                    <span class="integration-logo">SF</span>
+                    <div>
+                      <h4>Salesforce</h4>
+                      <p class="card-desc">CRM</p>
+                    </div>
+                  </div>
+                  <span class="badge success">已连接</span>
+                </div>
+                <p class="integration-desc">映射机会阶段与负责人字段，可开启双向同步并设置冲突覆盖优先级。</p>
+              </div>
+              <div class="integration-foot">
+                <small style="color: var(--text-hint)">最近同步：今天 09:33</small>
+                <button class="btn btn-outline" type="button">管理</button>
+              </div>
+            </article>
+
+            <article class="card card-body integration-card">
+              <div>
+                <div class="integration-head">
+                  <div class="integration-meta">
+                    <span class="integration-logo">BG</span>
+                    <div>
+                      <h4>BigQuery</h4>
+                      <p class="card-desc">数据仓库</p>
+                    </div>
+                  </div>
+                  <span class="badge success">已连接</span>
+                </div>
+                <p class="integration-desc">定时将业务事件写入分析仓库，支持 15 分钟增量与字段脱敏策略。</p>
+              </div>
+              <div class="integration-foot">
+                <small style="color: var(--text-hint)">最近同步：今天 09:48</small>
+                <button class="btn btn-outline" type="button">管理</button>
+              </div>
+            </article>
+
+            <article class="card card-body integration-card">
+              <div>
+                <div class="integration-head">
+                  <div class="integration-meta">
+                    <span class="integration-logo">ZP</span>
+                    <div>
+                      <h4>Zapier</h4>
+                      <p class="card-desc">自动化</p>
+                    </div>
+                  </div>
+                  <span class="badge neutral">未连接</span>
+                </div>
+                <p class="integration-desc">通过低代码流程连接外部应用，快速建立跨平台触发器和 webhook 自动化。</p>
+              </div>
+              <div class="integration-foot">
+                <small style="color: var(--text-hint)">暂无连接记录</small>
+                <button class="btn btn-primary" type="button">连接</button>
+              </div>
+            </article>
+          </section>
+
+          <section class="card">
+            <div class="section stack">
+              <div class="row between">
+                <h3 class="card-title">Slack 连接配置</h3>
+                <span class="badge success">已连接</span>
+              </div>
+              <div class="form-grid cols-2">
+                <div>
+                  <label class="label" for="workspace-id">Workspace ID</label>
+                  <input id="workspace-id" class="input" type="text" value="T08A4M7C2" />
+                </div>
+                <div>
+                  <label class="label" for="default-channel">默认频道</label>
+                  <input id="default-channel" class="input" type="text" value="#sales-alerts" />
+                </div>
+              </div>
+              <div>
+                <label class="label" for="webhook-url">Webhook URL</label>
+                <input id="webhook-url" class="input" type="text" value="https://hooks.slack.com/services/T08A4M7C2/..." />
+              </div>
+              <div>
+                <p class="label" style="margin-bottom: 8px">触发事件</p>
+                <div class="event-grid">
+                  <label class="event-option"><input class="ui-checkbox" type="checkbox" checked /> 新线索创建</label>
+                  <label class="event-option"><input class="ui-checkbox" type="checkbox" checked /> 商机阶段变更</label>
+                  <label class="event-option"><input class="ui-checkbox" type="checkbox" /> 回款异常提醒</label>
+                  <label class="event-option"><input class="ui-checkbox" type="checkbox" checked /> 高优先级任务逾期</label>
+                </div>
+              </div>
+              <div class="row" style="justify-content: flex-start; border-top: 1px solid var(--border-subtle); padding-top: 14px">
+                <button class="btn btn-primary" type="button">保存配置</button>
+                <button class="btn btn-outline" type="button">测试推送</button>
+                <button class="btn btn-ghost" type="button">断开连接</button>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+    <script>
+      lucide.createIcons();
+    </script>
+    <script src="./common.js"></script>
+  </body>
+</html>

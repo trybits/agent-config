@@ -1,0 +1,214 @@
+<!-- 这是比较简单的一个表格示例 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>简单列表</title>
+    <link rel="stylesheet" href="./common.css" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+      .filter-section {
+        padding: 0;
+        margin: 0;
+        border: 0;
+        background: transparent;
+        box-shadow: none;
+      }
+
+      .filter-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr;
+        gap: 12px;
+        align-items: end;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <h1>EZ-PROTOTYPE</h1>
+          <p>数字工坊</p>
+        </div>
+        <nav class="nav">
+          <section class="nav-group">
+            <p class="nav-group-title">概览</p>
+            <a class="nav-item" href="#"><i data-lucide="layout-dashboard" class="nav-icon"></i>仪表盘</a>
+            <div class="nav-sub">
+              <a class="nav-sub-item" href="#">快照</a>
+              <a class="nav-sub-item" href="#">KPI 看板</a>
+            </div>
+          </section>
+          <section class="nav-group">
+            <p class="nav-group-title">销售运营</p>
+            <a class="nav-item" href="#"><i data-lucide="users" class="nav-icon"></i>客户</a>
+            <div class="nav-sub">
+              <a class="nav-sub-item is-active" href="#">客户列表</a>
+              <a class="nav-sub-item" href="#">客户分群</a>
+            </div>
+            <a class="nav-item" href="#"><i data-lucide="user-plus" class="nav-icon"></i>线索</a>
+            <div class="nav-sub">
+              <a class="nav-sub-item" href="#">全部线索</a>
+              <a class="nav-sub-item" href="#">线索录入</a>
+            </div>
+            <a class="nav-item" href="#"><i data-lucide="briefcase" class="nav-icon"></i>商机</a>
+          </section>
+          <section class="nav-group">
+            <p class="nav-group-title">系统</p>
+            <a class="nav-item" href="#"><i data-lucide="list-todo" class="nav-icon"></i>任务</a>
+            <a class="nav-item" href="#"><i data-lucide="settings" class="nav-icon"></i>设置</a>
+          </section>
+        </nav>
+      </aside>
+
+      <div class="main">
+        <header class="topbar">
+          <div class="topbar-left">
+            <button class="icon-btn" type="button" data-sidebar-toggle aria-label="收起侧边栏" aria-expanded="true" title="收起侧边栏">
+              <i data-lucide="panel-left" class="nav-icon"></i>
+            </button>
+            <nav class="breadcrumb" aria-label="面包屑">
+              <ol class="breadcrumb-list">
+                <li class="breadcrumb-item"><a class="breadcrumb-link" href="#">首页</a></li>
+                <li class="breadcrumb-sep" aria-hidden="true">/</li>
+                <li class="breadcrumb-item"><a class="breadcrumb-link" href="#">客户</a></li>
+                <li class="breadcrumb-sep" aria-hidden="true">/</li>
+                <li class="breadcrumb-item"><span class="breadcrumb-page" aria-current="page">列表</span></li>
+              </ol>
+            </nav>
+          </div>
+          <div class="topbar-right">
+            
+            <div class="user-chip">
+              <span class="avatar">JP</span>
+              <span>周嘉言</span>
+            </div>
+          </div>
+        </header>
+        <main class="content stack" style="gap: 16px">
+          <section class="row between" style="flex-wrap: wrap; gap: 14px">
+            <div>
+              <h2 class="page-title">客户</h2>
+              <p class="page-subtitle">管理并跟进您的关键客户</p>
+            </div>
+            <button class="btn btn-primary" type="button">新增客户</button>
+          </section>
+
+          <section class="filter-section" aria-label="Filters">
+            <div class="filter-grid">
+              <div>
+                <label class="label" for="search-customer">筛选</label>
+                <input id="search-customer" class="input" type="text" placeholder="Filter by name, company, or email" />
+              </div>
+              <div>
+                <label class="label" for="status">状态</label>
+                <div class="select-wrap" data-select data-value="All">
+                  <button class="select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false">全部</button>
+                  <div class="select-content" role="listbox">
+                    <div class="select-label">状态</div>
+                    <div class="select-item is-selected" data-value="All">
+                      <span class="select-item-label">全部</span>
+                      <span class="select-check">✓</span>
+                    </div>
+                    <div class="select-item" data-value="Active">
+                      <span class="select-item-label">活跃</span>
+                      <span class="select-check" hidden>✓</span>
+                    </div>
+                    <div class="select-item" data-value="Pending">
+                      <span class="select-item-label">待处理</span>
+                      <span class="select-check" hidden>✓</span>
+                    </div>
+                    <div class="select-item" data-value="Inactive">
+                      <span class="select-item-label">未激活</span>
+                      <span class="select-check" hidden>✓</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <label class="label" for="date">日期</label>
+                <input id="date" class="input" type="text" value="Oct 01 - Oct 31" />
+              </div>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="table-wrap">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>客户</th>
+                    <th>公司</th>
+                    <th>状态</th>
+                    <th>最后联系</th>
+                    <th style="text-align: right">总消费</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>张子昂</strong><br /><span style="color: var(--text-hint)">a.sterling@example.com</span></td>
+                    <td>星曜咨询</td>
+                    <td><span class="badge success">活跃</span></td>
+                    <td>2023年10月24日</td>
+                    <td style="text-align: right"><strong>$45,200.00</strong></td>
+                  </tr>
+                  <tr>
+                    <td><strong>林语晴</strong><br /><span style="color: var(--text-hint)">elena.r@nexusmedia.io</span></td>
+                    <td>新域传媒</td>
+                    <td><span class="badge warning">待处理</span></td>
+                    <td>2023年10月22日</td>
+                    <td style="text-align: right"><strong>$12,850.00</strong></td>
+                  </tr>
+                  <tr>
+                    <td><strong>周承泽</strong><br /><span style="color: var(--text-hint)">thorne.j@vanguard.com</span></td>
+                    <td>领航方案</td>
+                    <td><span class="badge neutral">未激活</span></td>
+                    <td>2023年9月15日</td>
+                    <td style="text-align: right"><strong>$8,400.00</strong></td>
+                  </tr>
+                  <tr>
+                    <td><strong>沈若彤</strong><br /><span style="color: var(--text-hint)">s.dubois@luxe-events.fr</span></td>
+                    <td>璟尚活动集团</td>
+                    <td><span class="badge success">活跃</span></td>
+                    <td>2023年10月26日</td>
+                    <td style="text-align: right"><strong>$102,450.00</strong></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <div class="pagination-bar">
+            <p class="table-total-rows">显示第 1-4 条，共 128 条</p>
+            <nav class="pagination-nav" aria-label="分页">
+              <ul class="pagination-list">
+                <li>
+                  <button class="pagination-link is-prev" type="button" aria-label="转到上一页">
+                    <i data-lucide="chevron-left" class="nav-icon"></i>
+                    <span>上一页</span>
+                  </button>
+                </li>
+                <li><button class="pagination-link is-active" type="button" aria-current="page">1</button></li>
+                <li><button class="pagination-link" type="button">2</button></li>
+                <li><button class="pagination-link" type="button">3</button></li>
+                <li><span class="pagination-ellipsis" aria-hidden="true">...</span></li>
+                <li><button class="pagination-link" type="button">32</button></li>
+                <li>
+                  <button class="pagination-link is-next" type="button" aria-label="转到下一页">
+                    <span>下一页</span>
+                    <i data-lucide="chevron-right" class="nav-icon"></i>
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </main>
+      </div>
+    </div>
+    <script>
+      lucide.createIcons();
+    </script>
+    <script src="./common.js"></script>
+  </body>
+</html>

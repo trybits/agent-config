@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>仪表盘总览</title>
+    <link rel="stylesheet" href="./common.css" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <h1>EZ-PROTOTYPE</h1>
+          <p>数字工坊</p>
+        </div>
+        <nav class="nav">
+          <section class="nav-group">
+            <p class="nav-group-title">概览</p>
+            <a class="nav-item" href="#"><i data-lucide="layout-dashboard" class="nav-icon"></i>仪表盘</a>
+            <div class="nav-sub">
+              <a class="nav-sub-item is-active" href="#">快照</a>
+              <a class="nav-sub-item" href="#">KPI 看板</a>
+            </div>
+          </section>
+          <section class="nav-group">
+            <p class="nav-group-title">销售运营</p>
+            <a class="nav-item" href="#"><i data-lucide="users" class="nav-icon"></i>客户</a>
+            <div class="nav-sub">
+              <a class="nav-sub-item" href="#">客户列表</a>
+              <a class="nav-sub-item" href="#">客户分群</a>
+            </div>
+            <a class="nav-item" href="#"><i data-lucide="user-plus" class="nav-icon"></i>线索</a>
+            <div class="nav-sub">
+              <a class="nav-sub-item" href="#">全部线索</a>
+              <a class="nav-sub-item" href="#">线索录入</a>
+            </div>
+            <a class="nav-item" href="#"><i data-lucide="briefcase" class="nav-icon"></i>商机</a>
+          </section>
+          <section class="nav-group">
+            <p class="nav-group-title">系统</p>
+            <a class="nav-item" href="#"><i data-lucide="list-todo" class="nav-icon"></i>任务</a>
+            <a class="nav-item" href="#"><i data-lucide="settings" class="nav-icon"></i>设置</a>
+          </section>
+        </nav>
+      </aside>
+      <div class="main">
+        <header class="topbar">
+          <div class="topbar-left">
+            <button class="icon-btn" type="button" data-sidebar-toggle aria-label="收起侧边栏" aria-expanded="true" title="收起侧边栏">
+              <i data-lucide="panel-left" class="nav-icon"></i>
+            </button>
+            <nav class="breadcrumb" aria-label="面包屑">
+              <ol class="breadcrumb-list">
+                <li class="breadcrumb-item"><a class="breadcrumb-link" href="#">首页</a></li>
+                <li class="breadcrumb-sep" aria-hidden="true">/</li>
+                <li class="breadcrumb-item"><a class="breadcrumb-link" href="#">仪表盘</a></li>
+                <li class="breadcrumb-sep" aria-hidden="true">/</li>
+                <li class="breadcrumb-item"><span class="breadcrumb-page" aria-current="page">概览</span></li>
+              </ol>
+            </nav>
+          </div>
+          <div class="topbar-right">
+            <div class="user-chip">
+              <span class="avatar">周</span>
+              <span>周嘉言</span>
+            </div>
+          </div>
+        </header>
+        <main class="content stack" style="gap: 24px">
+          <section>
+            <h2 class="page-title" style="font-size: 30px">早上好，周嘉言</h2>
+            <p class="page-subtitle">你有 4 个高优先级商机等待签署。</p>
+          </section>
+
+          <section class="grid cols-4">
+            <article class="card card-body overview-card">
+              <div class="metric"><span class="kicker">总收入</span><span class="trend">+8.4%</span></div>
+              <div class="stat-number">$4.2M</div>
+            </article>
+            <article class="card card-body overview-card">
+              <div class="metric"><span class="kicker">新线索</span><span class="trend">+12</span></div>
+              <div class="stat-number">148</div>
+            </article>
+            <article class="card card-body overview-card">
+              <div class="metric"><span class="kicker">活跃商机</span><span class="trend" style="color: var(--text-secondary)">稳定</span></div>
+              <div class="stat-number">32</div>
+            </article>
+            <article class="card card-body overview-card">
+              <div class="metric"><span class="kicker">完成率</span><span class="trend">94%</span></div>
+              <div class="stat-number">88.5%</div>
+            </article>
+          </section>
+
+          <section  class="stack" style="gap: 12px">
+            <div>
+              <h3 class="section-title">图表示例</h3>
+              <p class="section-desc">用于柱状图与饼图的占位示例</p>
+            </div>
+            <div class="grid cols-3">
+              <article class="card span-2">
+                <div class="card-header row between">
+                  <div>
+                    <h3 class="card-title">销售趋势</h3>
+                    <p class="card-desc">最近 30 个工作日</p>
+                  </div>
+                  <div class="row">
+                    <button class="btn btn-outline" type="button">导出</button>
+                    <button class="btn btn-primary" type="button">设置</button>
+                  </div>
+                </div>
+              <div class="card-body chart-card-body">
+                <svg viewBox="0 0 1000 220" style="width: 100%; height: 220px; display: block">
+                    <defs>
+                      <linearGradient id="sales-fill" x1="0" x2="0" y1="0" y2="1">
+                        <stop offset="0%" stop-color="#0064ff" stop-opacity="0.26" />
+                        <stop offset="100%" stop-color="#0064ff" stop-opacity="0" />
+                      </linearGradient>
+                    </defs>
+                  <line x1="24" y1="202" x2="992" y2="202" stroke="rgba(0,0,0,0.12)" stroke-width="1.4" />
+                  <line x1="24" y1="154" x2="992" y2="154" stroke="rgba(0,0,0,0.06)" stroke-width="1" />
+                  <line x1="24" y1="106" x2="992" y2="106" stroke="rgba(0,0,0,0.06)" stroke-width="1" />
+                  <line x1="24" y1="58" x2="992" y2="58" stroke="rgba(0,0,0,0.06)" stroke-width="1" />
+                  <line x1="24" y1="10" x2="992" y2="10" stroke="rgba(0,0,0,0.06)" stroke-width="1" />
+                  <line x1="24" y1="4" x2="24" y2="202" stroke="rgba(0,0,0,0.12)" stroke-width="1.4" />
+
+                  <path d="M24,154 Q130,140 236,148 T432,102 T628,122 T810,58 T992,86 L992,202 L24,202 Z" fill="url(#sales-fill)" />
+                  <path d="M24,154 Q130,140 236,148 T432,102 T628,122 T810,58 T992,86" fill="none" stroke="#0064ff" stroke-width="3" />
+
+                  <text x="26" y="216" font-size="12" fill="rgba(0,0,0,0.48)">0</text>
+                  <text x="6" y="158" font-size="12" fill="rgba(0,0,0,0.48)">25</text>
+                  <text x="6" y="110" font-size="12" fill="rgba(0,0,0,0.48)">50</text>
+                  <text x="6" y="62" font-size="12" fill="rgba(0,0,0,0.48)">75</text>
+                  <text x="0" y="14" font-size="12" fill="rgba(0,0,0,0.48)">100</text>
+
+                  <text x="52" y="218" font-size="12" fill="rgba(0,0,0,0.48)">W1</text>
+                  <text x="224" y="218" font-size="12" fill="rgba(0,0,0,0.48)">W2</text>
+                  <text x="420" y="218" font-size="12" fill="rgba(0,0,0,0.48)">W3</text>
+                  <text x="624" y="218" font-size="12" fill="rgba(0,0,0,0.48)">W4</text>
+                  <text x="818" y="218" font-size="12" fill="rgba(0,0,0,0.48)">W5</text>
+                  <text x="968" y="218" font-size="12" fill="rgba(0,0,0,0.48)">W6</text>
+                </svg>
+              </div>
+              </article>
+
+              <article class="card">
+                <div class="card-header">
+                  <h3 class="card-title">重点商机</h3>
+                  <p class="card-desc">当前商机</p>
+                </div>
+                <div class="card-body top-deals">
+                  <div class="deal-item">
+                    <div class="deal-item-head">
+                      <div>
+                        <div class="deal-name">天际创投</div>
+                        <div class="deal-meta">洽谈中</div>
+                      </div>
+                      <span class="badge neutral">85%</span>
+                    </div>
+                    <div class="deal-foot">
+                      <span class="deal-amount">$850k</span>
+                      <div class="deal-progress"><span style="width: 85%"></span></div>
+                    </div>
+                  </div>
+                  <div class="deal-item">
+                    <div class="deal-item-head">
+                      <div>
+                        <div class="deal-name">以太系统</div>
+                        <div class="deal-meta">提案中</div>
+                      </div>
+                      <span class="badge neutral">60%</span>
+                    </div>
+                    <div class="deal-foot">
+                      <span class="deal-amount">$1.2M</span>
+                      <div class="deal-progress"><span style="width: 60%"></span></div>
+                    </div>
+                  </div>
+                  <div class="deal-item">
+                    <div class="deal-item-head">
+                      <div>
+                        <div class="deal-name">新星实验室</div>
+                        <div class="deal-meta">已确认</div>
+                      </div>
+                      <span class="badge neutral">35%</span>
+                    </div>
+                    <div class="deal-foot">
+                      <span class="deal-amount">$425k</span>
+                      <div class="deal-progress"><span style="width: 35%"></span></div>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <section class="stack" style="gap: 12px">
+            <div>
+              <h3 class="section-title">图表示例</h3>
+              <p class="section-desc">用于柱状图与饼图的占位示例</p>
+            </div>
+            <div class="grid cols-3">
+              <article class="card span-2">
+                <div class="card-header">
+                  <h3 class="card-title">月度收入（柱状图）</h3>
+                  <p class="card-desc">Q1-Q2 业绩预览</p>
+                </div>
+                <div class="card-body chart-card-body">
+                  <div class="chart-placeholder">
+                    <svg viewBox="0 0 760 240" style="width: 100%; height: 220px; display: block" aria-label="Bar chart example">
+                      <line x1="24" y1="218" x2="752" y2="218" stroke="rgba(0,0,0,0.12)" stroke-width="1.4" />
+                      <line x1="24" y1="166" x2="752" y2="166" stroke="rgba(0,0,0,0.06)" stroke-width="1" />
+                      <line x1="24" y1="114" x2="752" y2="114" stroke="rgba(0,0,0,0.06)" stroke-width="1" />
+                      <line x1="24" y1="62" x2="752" y2="62" stroke="rgba(0,0,0,0.06)" stroke-width="1" />
+                      <line x1="24" y1="6" x2="24" y2="218" stroke="rgba(0,0,0,0.12)" stroke-width="1.4" />
+
+                      <rect x="42" y="136" width="64" height="82" rx="8" fill="rgba(0, 100, 255, 0.3)" />
+                      <rect x="132" y="112" width="64" height="106" rx="8" fill="rgba(0, 100, 255, 0.5)" />
+                      <rect x="222" y="84" width="64" height="134" rx="8" fill="rgba(0, 100, 255, 0.75)" />
+                      <rect x="312" y="100" width="64" height="118" rx="8" fill="rgba(0, 100, 255, 0.6)" />
+                      <rect x="402" y="62" width="64" height="156" rx="8" fill="#0064ff" />
+                      <rect x="492" y="78" width="64" height="140" rx="8" fill="rgba(0, 100, 255, 0.78)" />
+                      <rect x="582" y="106" width="64" height="112" rx="8" fill="rgba(0, 100, 255, 0.58)" />
+                      <rect x="672" y="124" width="64" height="94" rx="8" fill="rgba(0, 100, 255, 0.42)" />
+
+                      <text x="22" y="234" font-size="12" fill="rgba(0,0,0,0.48)">0</text>
+                      <text x="6" y="170" font-size="12" fill="rgba(0,0,0,0.48)">50</text>
+                      <text x="0" y="118" font-size="12" fill="rgba(0,0,0,0.48)">100</text>
+                      <text x="0" y="66" font-size="12" fill="rgba(0,0,0,0.48)">150</text>
+
+                      <text x="52" y="238" font-size="12" fill="rgba(0,0,0,0.48)">1月</text>
+                      <text x="142" y="238" font-size="12" fill="rgba(0,0,0,0.48)">2月</text>
+                      <text x="232" y="238" font-size="12" fill="rgba(0,0,0,0.48)">3月</text>
+                      <text x="322" y="238" font-size="12" fill="rgba(0,0,0,0.48)">4月</text>
+                      <text x="412" y="238" font-size="12" fill="rgba(0,0,0,0.48)">5月</text>
+                      <text x="502" y="238" font-size="12" fill="rgba(0,0,0,0.48)">6月</text>
+                      <text x="592" y="238" font-size="12" fill="rgba(0,0,0,0.48)">7月</text>
+                      <text x="682" y="238" font-size="12" fill="rgba(0,0,0,0.48)">8月</text>
+                    </svg>
+                  </div>
+                </div>
+              </article>
+
+              <article class="card">
+                <div class="card-header">
+                  <h3 class="card-title">线索来源（饼图）</h3>
+                  <p class="card-desc">分布快照</p>
+                </div>
+                <div class="card-body">
+                  <div class="chart-placeholder chart-placeholder-center">
+                    <svg viewBox="0 0 260 220" style="width: 100%; height: 220px; display: block" aria-label="Pie chart example">
+                      <circle cx="110" cy="110" r="74" fill="transparent" stroke="#0064ff" stroke-width="34" stroke-dasharray="180 465" stroke-linecap="butt" transform="rotate(-90 110 110)" />
+                      <circle cx="110" cy="110" r="74" fill="transparent" stroke="#4f8cff" stroke-width="34" stroke-dasharray="130 465" stroke-dashoffset="-180" stroke-linecap="butt" transform="rotate(-90 110 110)" />
+                      <circle cx="110" cy="110" r="74" fill="transparent" stroke="#8ab4ff" stroke-width="34" stroke-dasharray="90 465" stroke-dashoffset="-310" stroke-linecap="butt" transform="rotate(-90 110 110)" />
+                      <circle cx="110" cy="110" r="74" fill="transparent" stroke="#c7dbff" stroke-width="34" stroke-dasharray="65 465" stroke-dashoffset="-400" stroke-linecap="butt" transform="rotate(-90 110 110)" />
+                    </svg>
+                    <ul class="chart-legend">
+                      <li><span class="legend-dot" style="background: #0064ff"></span>主动咨询</li>
+                      <li><span class="legend-dot" style="background: #4f8cff"></span>转介绍</li>
+                      <li><span class="legend-dot" style="background: #8ab4ff"></span>外呼</li>
+                      <li><span class="legend-dot" style="background: #c7dbff"></span>合作伙伴</li>
+                    </ul>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+    <script>
+      lucide.createIcons();
+    </script>
+    <script src="./common.js"></script>
+  </body>
+</html>

@@ -1,0 +1,801 @@
+<!-- 这是比较复杂的一个表格示例 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>复杂列表</title>
+    <link rel="stylesheet" href="./common.css" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+      .filter-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        gap: 16px;
+      }
+
+      .filter-toolbar-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex: 1;
+      }
+
+      .filter-toolbar-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .search-input-wrap {
+        position: relative;
+        width: 240px;
+      }
+
+      .search-input-wrap .search-icon {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 16px;
+        height: 16px;
+        color: var(--text-hint);
+        pointer-events: none;
+      }
+
+      .search-input-wrap .input {
+        padding-left: 34px;
+        width: 100%;
+      }
+
+      .batch-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .batch-actions-label {
+        font-size: 13px;
+        color: var(--text-secondary);
+        white-space: nowrap;
+      }
+
+      .batch-actions .select-wrap {
+        width: 140px;
+      }
+
+      .filter-dropdown {
+        position: relative;
+      }
+
+      .filter-trigger {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .filter-panel {
+        position: absolute;
+        top: calc(100% + 10px);
+        left: 0;
+        z-index: 30;
+        width: min(320px, calc(100vw - 80px));
+        display: none;
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-xl);
+        background: var(--card);
+        box-shadow: var(--shadow-m);
+        padding: 14px;
+      }
+
+      .filter-dropdown.is-open .filter-panel {
+        display: block;
+      }
+
+      .filter-panel-body {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .filter-panel-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .filter-panel-item .label {
+        margin: 0;
+        width: 88px;
+        flex: 0 0 88px;
+        font-weight: 400;
+      }
+
+      .filter-panel-item-control {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .table.is-wide {
+        min-width: 1280px;
+        border-collapse: separate;
+        border-spacing: 0;
+      }
+
+      .main,
+      .content,
+      .card {
+        min-width: 0;
+      }
+
+      .table-wrap {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+        position: relative;
+      }
+
+      .table th.checkbox-col,
+      .table td.checkbox-col {
+        width: 42px;
+        text-align: center;
+      }
+
+      .ui-checkbox {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 18px;
+        height: 18px;
+        margin: 0;
+        border-radius: 4px;
+        border: 1px solid var(--input);
+        background: var(--card);
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+        display: inline-grid;
+        place-content: center;
+        vertical-align: middle;
+        cursor: pointer;
+        transition: background-color 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+      }
+
+      .ui-checkbox::before {
+        content: "";
+        width: 10px;
+        height: 10px;
+        transform: scale(0);
+        transition: transform 120ms ease;
+        transform-origin: center;
+        clip-path: polygon(14% 52%, 0 66%, 40% 100%, 100% 25%, 84% 11%, 39% 67%);
+        background: #fff;
+      }
+
+      .ui-checkbox:hover {
+        border-color: var(--border);
+      }
+
+      .ui-checkbox:focus-visible {
+        outline: none;
+        border-color: var(--ring);
+        box-shadow: 0 0 0 3px rgba(0, 100, 255, 0.2);
+      }
+
+      .ui-checkbox:checked {
+        border-color: var(--primary);
+        background: var(--primary);
+      }
+
+      .ui-checkbox:checked::before {
+        transform: scale(1);
+      }
+
+      .table th.amount-col,
+      .table td.amount-col {
+        text-align: right;
+      }
+
+      .micro-progress {
+        width: 88px;
+        height: 6px;
+        border-radius: 999px;
+        background: var(--secondary);
+        overflow: hidden;
+      }
+
+      .micro-progress > span {
+        display: block;
+        height: 100%;
+        border-radius: 999px;
+        background: var(--primary);
+      }
+
+      .action-col {
+        position: sticky;
+        right: 0;
+        background: var(--card);
+        min-width: 112px;
+        background-clip: padding-box;
+        box-shadow: -10px 0 12px -12px rgba(0, 0, 0, 0.24);
+      }
+
+      .table thead .action-col {
+        z-index: 3;
+      }
+
+      .table tbody .action-col {
+        z-index: 5;
+      }
+
+      .table tr:hover .action-col {
+        background: var(--card);
+      }
+
+      .table .action-col::before {
+        content: "";
+        position: absolute;
+        inset: 0 auto 0 -12px;
+        width: 12px;
+        pointer-events: none;
+        background: linear-gradient(to right, rgba(255, 255, 255, 0), var(--card));
+      }
+
+      .action-btn {
+        width: 30px;
+        height: 30px;
+        border: 1px solid transparent;
+        border-radius: var(--radius-md);
+        background: transparent;
+        color: var(--text-secondary);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+
+      .action-btn:hover {
+        background: var(--secondary);
+        color: var(--primary);
+      }
+
+      .action-btn .nav-icon {
+        width: 14px;
+        height: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <h1>EZ-PROTOTYPE</h1>
+          <p>数字工坊</p>
+        </div>
+        <nav class="nav">
+          <section class="nav-group">
+            <p class="nav-group-title">概览</p>
+            <a class="nav-item" href="#"><i data-lucide="layout-dashboard" class="nav-icon"></i>仪表盘</a>
+            <div class="nav-sub">
+              <a class="nav-sub-item" href="#">快照</a>
+              <a class="nav-sub-item" href="#">KPI 看板</a>
+            </div>
+          </section>
+          <section class="nav-group">
+            <p class="nav-group-title">销售运营</p>
+            <a class="nav-item" href="#"><i data-lucide="users" class="nav-icon"></i>客户</a>
+            <div class="nav-sub">
+              <a class="nav-sub-item" href="#">客户列表</a>
+              <a class="nav-sub-item" href="#">客户分群</a>
+            </div>
+            <a class="nav-item is-active" href="#"><i data-lucide="user-plus" class="nav-icon"></i>线索</a>
+            <div class="nav-sub">
+              <a class="nav-sub-item is-active" href="#">全部线索</a>
+              <a class="nav-sub-item" href="#">线索录入</a>
+            </div>
+            <a class="nav-item" href="#"><i data-lucide="briefcase" class="nav-icon"></i>商机</a>
+          </section>
+          <section class="nav-group">
+            <p class="nav-group-title">系统</p>
+            <a class="nav-item" href="#"><i data-lucide="list-todo" class="nav-icon"></i>任务</a>
+            <a class="nav-item" href="#"><i data-lucide="settings" class="nav-icon"></i>设置</a>
+          </section>
+        </nav>
+      </aside>
+
+      <div class="main">
+        <header class="topbar">
+          <div class="topbar-left">
+            <button class="icon-btn" type="button" data-sidebar-toggle aria-label="收起侧边栏" aria-expanded="true" title="收起侧边栏">
+              <i data-lucide="panel-left" class="nav-icon"></i>
+            </button>
+            <nav class="breadcrumb" aria-label="面包屑">
+              <ol class="breadcrumb-list">
+                <li class="breadcrumb-item"><a class="breadcrumb-link" href="#">首页</a></li>
+                <li class="breadcrumb-sep" aria-hidden="true">/</li>
+                <li class="breadcrumb-item"><a class="breadcrumb-link" href="#">线索</a></li>
+                <li class="breadcrumb-sep" aria-hidden="true">/</li>
+                <li class="breadcrumb-item"><span class="breadcrumb-page" aria-current="page">管道追踪</span></li>
+              </ol>
+            </nav>
+          </div>
+          <div class="topbar-right">
+            
+            <div class="user-chip">
+              <span class="avatar">JP</span>
+              <span>周嘉言</span>
+            </div>
+          </div>
+        </header>
+        <main class="content stack" style="gap: 16px">
+          <section class="row between" style="flex-wrap: wrap; gap: 14px">
+            <div>
+              <h2 class="page-title">线索管道追踪</h2>
+              <p class="page-subtitle">跟踪团队的跟进节奏与商机健康度</p>
+            </div>
+            <button class="btn btn-primary" type="button">创建新线索</button>
+          </section>
+
+          <section>
+            <div class="filter-toolbar">
+              <div class="filter-toolbar-left">
+                <div class="search-input-wrap">
+                  <i data-lucide="search" class="search-icon"></i>
+                  <input class="input" type="text" placeholder="搜索线索..." aria-label="搜索线索" />
+                </div>
+                <div class="filter-dropdown" data-filter-dropdown>
+                  <button class="btn btn-outline filter-trigger" type="button" aria-expanded="false" data-filter-toggle>
+                    <i data-lucide="sliders-horizontal" class="nav-icon"></i>
+                    <span>筛选</span>
+                  </button>
+                  <div class="filter-panel">
+                    <div class="filter-panel-body">
+                      <div class="filter-panel-item">
+                        <label class="label" for="lead-owner">负责人</label>
+                        <div class="filter-panel-item-control">
+                          <input id="lead-owner" class="input" type="text" placeholder="Owner name" />
+                        </div>
+                      </div>
+                      <div class="filter-panel-item">
+                        <label class="label" for="lead-status">状态</label>
+                        <div class="filter-panel-item-control">
+                          <div class="select-wrap" data-select data-value="Any">
+                            <button class="select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false">任意</button>
+                            <div class="select-content" role="listbox">
+                              <div class="select-label">线索状态</div>
+                              <div class="select-item is-selected" data-value="Any">
+                                <span class="select-item-label">任意</span>
+                                <span class="select-check">✓</span>
+                              </div>
+                              <div class="select-item" data-value="Qualified">
+                                <span class="select-item-label">已确认</span>
+                                <span class="select-check" hidden>✓</span>
+                              </div>
+                              <div class="select-item" data-value="Negotiation">
+                                <span class="select-item-label">洽谈中</span>
+                                <span class="select-check" hidden>✓</span>
+                              </div>
+                              <div class="select-item" data-value="Cold">
+                                <span class="select-item-label">冷线索</span>
+                                <span class="select-check" hidden>✓</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="filter-panel-item">
+                        <label class="label" for="lead-range">日期范围</label>
+                        <div class="filter-panel-item-control">
+                          <input id="lead-range" class="input" type="text" value="Apr 01 - Apr 30, 2026" />
+                        </div>
+                      </div>
+                      <div class="filter-panel-item">
+                        <label class="label" for="min-amount">最小金额</label>
+                        <div class="filter-panel-item-control">
+                          <input id="min-amount" class="input" type="text" value="$10,000" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="filter-toolbar-right">
+                <div class="batch-actions">
+                  <span class="batch-actions-label">批量操作</span>
+                  <div class="select-wrap" data-select data-value="">
+                    <button class="select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false">请选择...</button>
+                    <div class="select-content" role="listbox">
+                      <div class="select-item" data-value="export-selected">
+                        <span class="select-item-label">导出所选</span>
+                        <span class="select-check" hidden>✓</span>
+                      </div>
+                      <div class="select-item" data-value="delete-selected">
+                        <span class="select-item-label">删除所选</span>
+                        <span class="select-check" hidden>✓</span>
+                      </div>
+                    </div>
+                  </div>
+                  <button class="btn btn-primary" type="button">执行</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="table-wrap">
+              <table class="table is-wide">
+                <thead>
+                  <tr>
+                    <th class="checkbox-col"><input class="ui-checkbox" type="checkbox" aria-label="全选线索" /></th>
+                    <th>线索</th>
+                    <th>公司</th>
+                    <th>负责人</th>
+                    <th>来源</th>
+                    <th>区域</th>
+                    <th>状态</th>
+                    <th>最后联系</th>
+                    <th>管道进度</th>
+                    <th class="amount-col">潜在价值</th>
+                    <th class="action-col">操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="checkbox-col"><input class="ui-checkbox" type="checkbox" aria-label="选择线索：张子昂" /></td>
+                    <td><strong>张子昂</strong><br /><span style="color: var(--text-hint)">a.sterling@example.com</span></td>
+                    <td>星曜咨询</td>
+                    <td>李沐阳</td>
+                    <td>转介绍</td>
+                    <td>北美</td>
+                    <td><span class="badge success">已确认</span></td>
+                    <td>2026-04-11 14:45</td>
+                    <td>
+                      <div class="micro-progress" role="img" aria-label="管道进度 84%">
+                        <span style="width: 84%"></span>
+                      </div>
+                    </td>
+                    <td class="amount-col"><strong>$145,200.00</strong></td>
+                    <td class="action-col">
+                      <button class="action-btn" type="button" aria-label="更多操作：张子昂">
+                        <i data-lucide="ellipsis" class="nav-icon"></i>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="checkbox-col"><input class="ui-checkbox" type="checkbox" aria-label="选择线索：林语晴" /></td>
+                    <td><strong>林语晴</strong><br /><span style="color: var(--text-hint)">elena.r@nexusmedia.io</span></td>
+                    <td>新域传媒</td>
+                    <td>金素菲</td>
+                    <td>主动咨询</td>
+                    <td>亚太</td>
+                    <td><span class="badge warning">洽谈中</span></td>
+                    <td>2026-04-10 09:20</td>
+                    <td>
+                      <div class="micro-progress" role="img" aria-label="管道进度 62%">
+                        <span style="width: 62%"></span>
+                      </div>
+                    </td>
+                    <td class="amount-col"><strong>$82,850.00</strong></td>
+                    <td class="action-col">
+                      <button class="action-btn" type="button" aria-label="更多操作：林语晴">
+                        <i data-lucide="ellipsis" class="nav-icon"></i>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="checkbox-col"><input class="ui-checkbox" type="checkbox" aria-label="选择线索：周承泽" /></td>
+                    <td><strong>周承泽</strong><br /><span style="color: var(--text-hint)">thorne.j@vanguard.com</span></td>
+                    <td>领航方案</td>
+                    <td>王逸辰</td>
+                    <td>外呼</td>
+                    <td>欧洲中东非</td>
+                    <td><span class="badge neutral">冷线索</span></td>
+                    <td>2026-04-08 18:05</td>
+                    <td>
+                      <div class="micro-progress" role="img" aria-label="管道进度 27%">
+                        <span style="width: 27%"></span>
+                      </div>
+                    </td>
+                    <td class="amount-col"><strong>$38,400.00</strong></td>
+                    <td class="action-col">
+                      <button class="action-btn" type="button" aria-label="更多操作：周承泽">
+                        <i data-lucide="ellipsis" class="nav-icon"></i>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="checkbox-col"><input class="ui-checkbox" type="checkbox" aria-label="选择线索：沈若彤" /></td>
+                    <td><strong>沈若彤</strong><br /><span style="color: var(--text-hint)">s.dubois@luxe-events.fr</span></td>
+                    <td>璟尚活动集团</td>
+                    <td>马婷</td>
+                    <td>合作伙伴</td>
+                    <td>欧洲中东非</td>
+                    <td><span class="badge success">已确认</span></td>
+                    <td>2026-04-12 11:30</td>
+                    <td>
+                      <div class="micro-progress" role="img" aria-label="管道进度 91%">
+                        <span style="width: 91%"></span>
+                      </div>
+                    </td>
+                    <td class="amount-col"><strong>$202,450.00</strong></td>
+                    <td class="action-col">
+                      <button class="action-btn" type="button" aria-label="更多操作：沈若彤">
+                        <i data-lucide="ellipsis" class="nav-icon"></i>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="checkbox-col"><input class="ui-checkbox" type="checkbox" aria-label="选择线索：段明轩" /></td>
+                    <td><strong>段明轩</strong><br /><span style="color: var(--text-hint)">d.brooks@aureliagroup.com</span></td>
+                    <td>欧瑞集团</td>
+                    <td>陈立欧</td>
+                    <td>外呼</td>
+                    <td>北美</td>
+                    <td><span class="badge warning">洽谈中</span></td>
+                    <td>2026-04-12 16:10</td>
+                    <td><div class="micro-progress" role="img" aria-label="管道进度 73%"><span style="width: 73%"></span></div></td>
+                    <td class="amount-col"><strong>$96,700.00</strong></td>
+                    <td class="action-col"><button class="action-btn" type="button" aria-label="更多操作：段明轩"><i data-lucide="ellipsis" class="nav-icon"></i></button></td>
+                  </tr>
+                  <tr>
+                    <td class="checkbox-col"><input class="ui-checkbox" type="checkbox" aria-label="选择线索：白若宁" /></td>
+                    <td><strong>白若宁</strong><br /><span style="color: var(--text-hint)">priya.nair@horizondx.io</span></td>
+                    <td>地平线数智</td>
+                    <td>赵安美</td>
+                    <td>主动咨询</td>
+                    <td>亚太</td>
+                    <td><span class="badge success">已确认</span></td>
+                    <td>2026-04-09 10:40</td>
+                    <td><div class="micro-progress" role="img" aria-label="管道进度 88%"><span style="width: 88%"></span></div></td>
+                    <td class="amount-col"><strong>$164,900.00</strong></td>
+                    <td class="action-col"><button class="action-btn" type="button" aria-label="更多操作：白若宁"><i data-lucide="ellipsis" class="nav-icon"></i></button></td>
+                  </tr>
+                  <tr>
+                    <td class="checkbox-col"><input class="ui-checkbox" type="checkbox" aria-label="选择线索：马承安" /></td>
+                    <td><strong>马承安</strong><br /><span style="color: var(--text-hint)">m.gray@atlasprime.co</span></td>
+                    <td>阿特拉斯科技</td>
+                    <td>侯瑞妮</td>
+                    <td>转介绍</td>
+                    <td>欧洲中东非</td>
+                    <td><span class="badge neutral">冷线索</span></td>
+                    <td>2026-04-07 12:25</td>
+                    <td><div class="micro-progress" role="img" aria-label="管道进度 34%"><span style="width: 34%"></span></div></td>
+                    <td class="amount-col"><strong>$42,300.00</strong></td>
+                    <td class="action-col"><button class="action-btn" type="button" aria-label="更多操作：马承安"><i data-lucide="ellipsis" class="nav-icon"></i></button></td>
+                  </tr>
+                  <tr>
+                    <td class="checkbox-col"><input class="ui-checkbox" type="checkbox" aria-label="选择线索：伊莎贝拉·格林" /></td>
+                    <td><strong>伊莎贝拉·格林</strong><br /><span style="color: var(--text-hint)">i.green@northbridge.ai</span></td>
+                    <td>北桥智能</td>
+                    <td>谭欧文</td>
+                    <td>合作伙伴</td>
+                    <td>亚太</td>
+                    <td><span class="badge success">已确认</span></td>
+                    <td>2026-04-12 08:55</td>
+                    <td><div class="micro-progress" role="img" aria-label="管道进度 79%"><span style="width: 79%"></span></div></td>
+                    <td class="amount-col"><strong>$118,200.00</strong></td>
+                    <td class="action-col"><button class="action-btn" type="button" aria-label="更多操作：伊莎贝拉·格林"><i data-lucide="ellipsis" class="nav-icon"></i></button></td>
+                  </tr>
+                  <tr>
+                    <td class="checkbox-col"><input class="ui-checkbox" type="checkbox" aria-label="选择线索：易承科" /></td>
+                    <td><strong>易承科</strong><br /><span style="color: var(--text-hint)">ethan.cole@brightlane.net</span></td>
+                    <td>明途科技</td>
+                    <td>李沐阳</td>
+                    <td>主动咨询</td>
+                    <td>北美</td>
+                    <td><span class="badge warning">洽谈中</span></td>
+                    <td>2026-04-10 15:15</td>
+                    <td><div class="micro-progress" role="img" aria-label="管道进度 66%"><span style="width: 66%"></span></div></td>
+                    <td class="amount-col"><strong>$88,600.00</strong></td>
+                    <td class="action-col"><button class="action-btn" type="button" aria-label="更多操作：易承科"><i data-lucide="ellipsis" class="nav-icon"></i></button></td>
+                  </tr>
+                  <tr>
+                    <td class="checkbox-col"><input class="ui-checkbox" type="checkbox" aria-label="选择线索：周可欣" /></td>
+                    <td><strong>周可欣</strong><br /><span style="color: var(--text-hint)">c.vincent@verveworks.com</span></td>
+                    <td>灵感工场</td>
+                    <td>金素菲</td>
+                    <td>转介绍</td>
+                    <td>欧洲中东非</td>
+                    <td><span class="badge success">已确认</span></td>
+                    <td>2026-04-11 09:05</td>
+                    <td><div class="micro-progress" role="img" aria-label="管道进度 82%"><span style="width: 82%"></span></div></td>
+                    <td class="amount-col"><strong>$132,400.00</strong></td>
+                    <td class="action-col"><button class="action-btn" type="button" aria-label="更多操作：周可欣"><i data-lucide="ellipsis" class="nav-icon"></i></button></td>
+                  </tr>
+                  <tr>
+                    <td class="checkbox-col"><input class="ui-checkbox" type="checkbox" aria-label="选择线索：任墨飞" /></td>
+                    <td><strong>任墨飞</strong><br /><span style="color: var(--text-hint)">ryan.murphy@skylinedev.io</span></td>
+                    <td>天际开发</td>
+                    <td>王逸辰</td>
+                    <td>外呼</td>
+                    <td>北美</td>
+                    <td><span class="badge neutral">冷线索</span></td>
+                    <td>2026-04-06 17:35</td>
+                    <td><div class="micro-progress" role="img" aria-label="管道进度 22%"><span style="width: 22%"></span></div></td>
+                    <td class="amount-col"><strong>$29,800.00</strong></td>
+                    <td class="action-col"><button class="action-btn" type="button" aria-label="更多操作：任墨飞"><i data-lucide="ellipsis" class="nav-icon"></i></button></td>
+                  </tr>
+                  <tr>
+                    <td class="checkbox-col"><input class="ui-checkbox" type="checkbox" aria-label="选择线索：方知夏" /></td>
+                    <td><strong>方知夏</strong><br /><span style="color: var(--text-hint)">emma.f@luminara.studio</span></td>
+                    <td>流明工作室</td>
+                    <td>马婷</td>
+                    <td>合作伙伴</td>
+                    <td>欧洲中东非</td>
+                    <td><span class="badge warning">洽谈中</span></td>
+                    <td>2026-04-11 13:48</td>
+                    <td><div class="micro-progress" role="img" aria-label="管道进度 69%"><span style="width: 69%"></span></div></td>
+                    <td class="amount-col"><strong>$104,250.00</strong></td>
+                    <td class="action-col"><button class="action-btn" type="button" aria-label="更多操作：方知夏"><i data-lucide="ellipsis" class="nav-icon"></i></button></td>
+                  </tr>
+                  <tr>
+                    <td class="checkbox-col"><input class="ui-checkbox" type="checkbox" aria-label="选择线索：卢嘉铭" /></td>
+                    <td><strong>卢嘉铭</strong><br /><span style="color: var(--text-hint)">lucas.b@quantumforge.ai</span></td>
+                    <td>量子锻造</td>
+                    <td>陈立欧</td>
+                    <td>主动咨询</td>
+                    <td>亚太</td>
+                    <td><span class="badge success">已确认</span></td>
+                    <td>2026-04-12 10:18</td>
+                    <td><div class="micro-progress" role="img" aria-label="管道进度 86%"><span style="width: 86%"></span></div></td>
+                    <td class="amount-col"><strong>$176,500.00</strong></td>
+                    <td class="action-col"><button class="action-btn" type="button" aria-label="更多操作：卢嘉铭"><i data-lucide="ellipsis" class="nav-icon"></i></button></td>
+                  </tr>
+                  <tr>
+                    <td class="checkbox-col"><input class="ui-checkbox" type="checkbox" aria-label="选择线索：诺拉·艾哈迈德" /></td>
+                    <td><strong>诺拉·艾哈迈德</strong><br /><span style="color: var(--text-hint)">n.ahmed@deepviewlabs.com</span></td>
+                    <td>深见实验室</td>
+                    <td>赵安美</td>
+                    <td>转介绍</td>
+                    <td>亚太</td>
+                    <td><span class="badge warning">洽谈中</span></td>
+                    <td>2026-04-09 18:20</td>
+                    <td><div class="micro-progress" role="img" aria-label="管道进度 58%"><span style="width: 58%"></span></div></td>
+                    <td class="amount-col"><strong>$77,200.00</strong></td>
+                    <td class="action-col"><button class="action-btn" type="button" aria-label="更多操作：诺拉·艾哈迈德"><i data-lucide="ellipsis" class="nav-icon"></i></button></td>
+                  </tr>
+                  <tr>
+                    <td class="checkbox-col"><input class="ui-checkbox" type="checkbox" aria-label="选择线索：欧文·帕克" /></td>
+                    <td><strong>欧文·帕克</strong><br /><span style="color: var(--text-hint)">oparker@ironridge.io</span></td>
+                    <td>铁岭科技</td>
+                    <td>侯瑞妮</td>
+                    <td>外呼</td>
+                    <td>北美</td>
+                    <td><span class="badge neutral">冷线索</span></td>
+                    <td>2026-04-05 11:02</td>
+                    <td><div class="micro-progress" role="img" aria-label="管道进度 19%"><span style="width: 19%"></span></div></td>
+                    <td class="amount-col"><strong>$24,500.00</strong></td>
+                    <td class="action-col"><button class="action-btn" type="button" aria-label="更多操作：欧文·帕克"><i data-lucide="ellipsis" class="nav-icon"></i></button></td>
+                  </tr>
+                  <tr>
+                    <td class="checkbox-col"><input class="ui-checkbox" type="checkbox" aria-label="选择线索：艾娃·斯科特" /></td>
+                    <td><strong>艾娃·斯科特</strong><br /><span style="color: var(--text-hint)">ava.scott@novafleet.com</span></td>
+                    <td>新舰科技</td>
+                    <td>谭欧文</td>
+                    <td>合作伙伴</td>
+                    <td>欧洲中东非</td>
+                    <td><span class="badge success">已确认</span></td>
+                    <td>2026-04-12 12:42</td>
+                    <td><div class="micro-progress" role="img" aria-label="管道进度 93%"><span style="width: 93%"></span></div></td>
+                    <td class="amount-col"><strong>$219,300.00</strong></td>
+                    <td class="action-col"><button class="action-btn" type="button" aria-label="更多操作：艾娃·斯科特"><i data-lucide="ellipsis" class="nav-icon"></i></button></td>
+                  </tr>
+                  <tr>
+                    <td class="checkbox-col"><input class="ui-checkbox" type="checkbox" aria-label="选择线索：诺亚·亚当斯" /></td>
+                    <td><strong>诺亚·亚当斯</strong><br /><span style="color: var(--text-hint)">n.adams@clearpathdigital.com</span></td>
+                    <td>清途数字</td>
+                    <td>李沐阳</td>
+                    <td>主动咨询</td>
+                    <td>北美</td>
+                    <td><span class="badge warning">洽谈中</span></td>
+                    <td>2026-04-10 07:55</td>
+                    <td><div class="micro-progress" role="img" aria-label="管道进度 64%"><span style="width: 64%"></span></div></td>
+                    <td class="amount-col"><strong>$90,100.00</strong></td>
+                    <td class="action-col"><button class="action-btn" type="button" aria-label="更多操作：诺亚·亚当斯"><i data-lucide="ellipsis" class="nav-icon"></i></button></td>
+                  </tr>
+                  <tr>
+                    <td class="checkbox-col"><input class="ui-checkbox" type="checkbox" aria-label="选择线索：米娅·霍华德" /></td>
+                    <td><strong>米娅·霍华德</strong><br /><span style="color: var(--text-hint)">mia.howard@tangentworks.ai</span></td>
+                    <td>切点工场</td>
+                    <td>金素菲</td>
+                    <td>转介绍</td>
+                    <td>亚太</td>
+                    <td><span class="badge success">已确认</span></td>
+                    <td>2026-04-11 20:10</td>
+                    <td><div class="micro-progress" role="img" aria-label="管道进度 81%"><span style="width: 81%"></span></div></td>
+                    <td class="amount-col"><strong>$136,800.00</strong></td>
+                    <td class="action-col"><button class="action-btn" type="button" aria-label="更多操作：米娅·霍华德"><i data-lucide="ellipsis" class="nav-icon"></i></button></td>
+                  </tr>
+                  <tr>
+                    <td class="checkbox-col"><input class="ui-checkbox" type="checkbox" aria-label="选择线索：利亚姆·罗素" /></td>
+                    <td><strong>利亚姆·罗素</strong><br /><span style="color: var(--text-hint)">liam.r@silverpeak.io</span></td>
+                    <td>银峰科技</td>
+                    <td>王逸辰</td>
+                    <td>外呼</td>
+                    <td>欧洲中东非</td>
+                    <td><span class="badge neutral">冷线索</span></td>
+                    <td>2026-04-06 09:31</td>
+                    <td><div class="micro-progress" role="img" aria-label="管道进度 29%"><span style="width: 29%"></span></div></td>
+                    <td class="amount-col"><strong>$36,900.00</strong></td>
+                    <td class="action-col"><button class="action-btn" type="button" aria-label="更多操作：利亚姆·罗素"><i data-lucide="ellipsis" class="nav-icon"></i></button></td>
+                  </tr>
+                  <tr>
+                    <td class="checkbox-col"><input class="ui-checkbox" type="checkbox" aria-label="选择线索：格蕾丝·特纳" /></td>
+                    <td><strong>格蕾丝·特纳</strong><br /><span style="color: var(--text-hint)">grace.turner@orbitstack.co</span></td>
+                    <td>轨道栈科技</td>
+                    <td>马婷</td>
+                    <td>合作伙伴</td>
+                    <td>北美</td>
+                    <td><span class="badge warning">洽谈中</span></td>
+                    <td>2026-04-09 14:02</td>
+                    <td><div class="micro-progress" role="img" aria-label="管道进度 61%"><span style="width: 61%"></span></div></td>
+                    <td class="amount-col"><strong>$85,450.00</strong></td>
+                    <td class="action-col"><button class="action-btn" type="button" aria-label="更多操作：格蕾丝·特纳"><i data-lucide="ellipsis" class="nav-icon"></i></button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <div class="pagination-bar">
+            <p class="table-total-rows">显示第 1-20 条，共 128 条</p>
+            <nav class="pagination-nav" aria-label="分页">
+              <ul class="pagination-list">
+                <li>
+                  <button class="pagination-link is-prev" type="button" aria-label="转到上一页">
+                    <i data-lucide="chevron-left" class="nav-icon"></i>
+                    <span>上一页</span>
+                  </button>
+                </li>
+                <li><button class="pagination-link is-active" type="button" aria-current="page">1</button></li>
+                <li><button class="pagination-link" type="button">2</button></li>
+                <li><button class="pagination-link" type="button">3</button></li>
+                <li><span class="pagination-ellipsis" aria-hidden="true">...</span></li>
+                <li><button class="pagination-link" type="button">32</button></li>
+                <li>
+                  <button class="pagination-link is-next" type="button" aria-label="转到下一页">
+                    <span>下一页</span>
+                    <i data-lucide="chevron-right" class="nav-icon"></i>
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </main>
+      </div>
+    </div>
+    <script>
+      (function () {
+        var dropdown = document.querySelector('[data-filter-dropdown]');
+        if (!dropdown) return;
+
+        var trigger = dropdown.querySelector('[data-filter-toggle]');
+        if (!trigger) return;
+
+        function setOpenState(open) {
+          dropdown.classList.toggle('is-open', open);
+          trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+        }
+
+        trigger.addEventListener('click', function () {
+          setOpenState(!dropdown.classList.contains('is-open'));
+        });
+
+        document.addEventListener('click', function (e) {
+          var target = e.target;
+          if (!(target instanceof Element)) return;
+          if (!target.closest('[data-filter-dropdown]')) {
+            setOpenState(false);
+          }
+        });
+
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape') setOpenState(false);
+        });
+      })();
+
+      lucide.createIcons();
+    </script>
+    <script src="./common.js"></script>
+  </body>
+</html>

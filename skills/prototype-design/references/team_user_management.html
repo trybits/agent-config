@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>团队与成员</title>
+    <link rel="stylesheet" href="./common.css" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .toolbar {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr auto;
+        gap: 12px;
+        align-items: end;
+      }
+
+      .member-cell {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .mini-avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 999px;
+        background: rgba(0, 100, 255, 0.12);
+        color: var(--primary);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .member-meta {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .member-meta small {
+        color: var(--text-hint);
+        font-size: 12px;
+      }
+
+      .table-actions {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .action-icon-btn {
+        width: 30px;
+        height: 30px;
+        border: 1px solid transparent;
+        border-radius: var(--radius-md);
+        background: transparent;
+        color: var(--text-secondary);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+
+      .action-icon-btn:hover {
+        background: var(--secondary);
+        color: var(--text-primary);
+      }
+
+      .action-icon-btn:focus-visible {
+        outline: none;
+        border-color: var(--ring);
+        box-shadow: 0 0 0 3px rgba(0, 100, 255, 0.18);
+      }
+
+      .action-icon-btn .nav-icon {
+        width: 14px;
+        height: 14px;
+      }
+
+      .action-menu {
+        position: relative;
+      }
+
+      .action-menu-panel {
+        position: absolute;
+        top: calc(100% + 8px);
+        right: 0;
+        z-index: 25;
+        min-width: 132px;
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-md);
+        background: var(--card);
+        box-shadow: var(--shadow-m);
+        padding: 6px;
+        display: none;
+      }
+
+      .action-menu.is-open .action-menu-panel {
+        display: block;
+      }
+
+      .action-menu-item {
+        width: 100%;
+        height: 30px;
+        border: 0;
+        border-radius: 5px;
+        background: transparent;
+        color: var(--text-secondary);
+        font-size: 13px;
+        text-align: left;
+        padding: 0 9px;
+        cursor: pointer;
+      }
+
+      .action-menu-item:hover {
+        background: var(--secondary);
+        color: var(--text-primary);
+      }
+
+      @media (max-width: 1180px) {
+        .stats-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .toolbar {
+          grid-template-columns: 1fr;
+        }
+
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <h1>EZ-PROTOTYPE</h1>
+          <p>数字工坊</p>
+        </div>
+        <nav class="nav">
+          <section class="nav-group">
+            <p class="nav-group-title">概览</p>
+            <a class="nav-item" href="#"><i data-lucide="layout-dashboard" class="nav-icon"></i>仪表盘</a>
+            <div class="nav-sub">
+              <a class="nav-sub-item" href="#">快照</a>
+              <a class="nav-sub-item" href="#">KPI 看板</a>
+            </div>
+          </section>
+          <section class="nav-group">
+            <p class="nav-group-title">销售运营</p>
+            <a class="nav-item" href="#"><i data-lucide="users" class="nav-icon"></i>客户</a>
+            <a class="nav-item" href="#"><i data-lucide="user-plus" class="nav-icon"></i>线索</a>
+            <a class="nav-item" href="#"><i data-lucide="briefcase" class="nav-icon"></i>商机</a>
+          </section>
+          <section class="nav-group">
+            <p class="nav-group-title">系统</p>
+            <a class="nav-item is-active" href="#"><i data-lucide="users-round" class="nav-icon"></i>团队成员</a>
+            <a class="nav-item" href="#"><i data-lucide="settings" class="nav-icon"></i>设置</a>
+          </section>
+        </nav>
+      </aside>
+
+      <div class="main">
+        <header class="topbar">
+          <div class="topbar-left">
+            <button class="icon-btn" type="button" data-sidebar-toggle aria-label="收起侧边栏" aria-expanded="true" title="收起侧边栏">
+              <i data-lucide="panel-left" class="nav-icon"></i>
+            </button>
+            <nav class="breadcrumb" aria-label="面包屑">
+              <ol class="breadcrumb-list">
+                <li class="breadcrumb-item"><a class="breadcrumb-link" href="#">首页</a></li>
+                <li class="breadcrumb-sep" aria-hidden="true">/</li>
+                <li class="breadcrumb-item"><a class="breadcrumb-link" href="#">系统</a></li>
+                <li class="breadcrumb-sep" aria-hidden="true">/</li>
+                <li class="breadcrumb-item"><span class="breadcrumb-page" aria-current="page">团队与成员</span></li>
+              </ol>
+            </nav>
+          </div>
+          <div class="topbar-right">
+            <div class="user-chip">
+              <span class="avatar">周</span>
+              <span>周嘉言</span>
+            </div>
+          </div>
+        </header>
+
+        <main class="content stack" style="gap: 16px">
+          <section class="row between" style="flex-wrap: wrap; gap: 14px">
+            <div>
+              <h2 class="page-title">团队与成员</h2>
+              <p class="page-subtitle">统一管理组织成员、角色权限与登录安全策略。</p>
+            </div>
+            <button class="btn btn-primary" type="button">邀请成员</button>
+          </section>
+
+          <section class="stats-grid">
+            <article class="card card-body">
+              <p class="kicker">席位使用</p>
+              <p class="stat-number" style="margin-top: 8px">46 / 60</p>
+              <p class="card-desc">剩余 14 个可分配席位</p>
+            </article>
+            <article class="card card-body">
+              <p class="kicker">待接受邀请</p>
+              <p class="stat-number" style="margin-top: 8px">7</p>
+              <p class="card-desc">最近 24 小时新增 2 人</p>
+            </article>
+            <article class="card card-body">
+              <p class="kicker">管理员数量</p>
+              <p class="stat-number" style="margin-top: 8px">5</p>
+              <p class="card-desc">建议控制在 3-6 人范围</p>
+            </article>
+          </section>
+
+          <section class="toolbar">
+            <div>
+              <label class="label" for="member-search">搜索成员</label>
+              <input id="member-search" class="input" type="text" placeholder="姓名、邮箱或部门" />
+            </div>
+            <div>
+              <label class="label" for="member-role">角色</label>
+              <div class="select-wrap" data-select data-value="all">
+                <button class="select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false">全部角色</button>
+                <div class="select-content" role="listbox">
+                  <div class="select-label">角色</div>
+                  <div class="select-item is-selected" data-value="all">
+                    <span class="select-item-label">全部角色</span>
+                    <span class="select-check">✓</span>
+                  </div>
+                  <div class="select-item" data-value="owner">
+                    <span class="select-item-label">Owner</span>
+                    <span class="select-check" hidden>✓</span>
+                  </div>
+                  <div class="select-item" data-value="admin">
+                    <span class="select-item-label">Admin</span>
+                    <span class="select-check" hidden>✓</span>
+                  </div>
+                  <div class="select-item" data-value="member">
+                    <span class="select-item-label">Member</span>
+                    <span class="select-check" hidden>✓</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <label class="label" for="member-status">状态</label>
+              <div class="select-wrap" data-select data-value="active">
+                <button class="select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false">活跃</button>
+                <div class="select-content" role="listbox">
+                  <div class="select-label">状态</div>
+                  <div class="select-item is-selected" data-value="active">
+                    <span class="select-item-label">活跃</span>
+                    <span class="select-check">✓</span>
+                  </div>
+                  <div class="select-item" data-value="invited">
+                    <span class="select-item-label">待激活</span>
+                    <span class="select-check" hidden>✓</span>
+                  </div>
+                  <div class="select-item" data-value="disabled">
+                    <span class="select-item-label">已禁用</span>
+                    <span class="select-check" hidden>✓</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button class="btn btn-outline" type="button">导出成员</button>
+          </section>
+
+          <section class="card">
+            <div class="table-wrap">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>成员</th>
+                    <th>角色</th>
+                    <th>部门</th>
+                    <th>最后活跃</th>
+                    <th>双重验证</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <div class="member-cell">
+                        <span class="mini-avatar">周</span>
+                        <span class="member-meta"><strong>周嘉言</strong><small>julian.zhou@atelier.com</small></span>
+                      </div>
+                    </td>
+                    <td><span class="badge neutral">Owner</span></td>
+                    <td>运营管理</td>
+                    <td>今天 09:18</td>
+                    <td><span class="ui-switch is-checked" role="switch" aria-checked="true" aria-label="双重验证已开启"></span></td>
+                    <td>
+                      <div class="table-actions">
+                        <button class="action-icon-btn" type="button" aria-label="编辑成员">
+                          <i data-lucide="pencil" class="nav-icon"></i>
+                        </button>
+                        <button class="action-icon-btn" type="button" aria-label="重置密码">
+                          <i data-lucide="key-round" class="nav-icon"></i>
+                        </button>
+                        <button class="action-icon-btn" type="button" aria-label="停用成员">
+                          <i data-lucide="user-x" class="nav-icon"></i>
+                        </button>
+                        <div class="action-menu" data-action-menu>
+                          <button class="action-icon-btn" type="button" aria-label="更多操作" data-action-menu-toggle aria-expanded="false">
+                            <i data-lucide="ellipsis" class="nav-icon"></i>
+                          </button>
+                          <div class="action-menu-panel" role="menu">
+                            <button class="action-menu-item" type="button" role="menuitem">复制用户 ID</button>
+                            <button class="action-menu-item" type="button" role="menuitem">查看审计日志</button>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="member-cell">
+                        <span class="mini-avatar">李</span>
+                        <span class="member-meta"><strong>李沐阳</strong><small>sam.li@atelier.com</small></span>
+                      </div>
+                    </td>
+                    <td><span class="badge neutral">Admin</span></td>
+                    <td>销售团队</td>
+                    <td>今天 08:47</td>
+                    <td><span class="ui-switch is-checked" role="switch" aria-checked="true" aria-label="双重验证已开启"></span></td>
+                    <td>
+                      <div class="table-actions">
+                        <button class="action-icon-btn" type="button" aria-label="编辑成员">
+                          <i data-lucide="pencil" class="nav-icon"></i>
+                        </button>
+                        <button class="action-icon-btn" type="button" aria-label="停用成员">
+                          <i data-lucide="user-x" class="nav-icon"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="member-cell">
+                        <span class="mini-avatar">马</span>
+                        <span class="member-meta"><strong>马婷</strong><small>tina.ma@atelier.com</small></span>
+                      </div>
+                    </td>
+                    <td><span class="badge neutral">Member</span></td>
+                    <td>客户成功</td>
+                    <td>昨天 19:20</td>
+                    <td><span class="ui-switch" role="switch" aria-checked="false" aria-label="双重验证未开启"></span></td>
+                    <td>
+                      <div class="table-actions">
+                        <button class="action-icon-btn" type="button" aria-label="编辑成员">
+                          <i data-lucide="pencil" class="nav-icon"></i>
+                        </button>
+                        <button class="action-icon-btn" type="button" aria-label="提醒开启双重验证">
+                          <i data-lucide="bell-ring" class="nav-icon"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="member-cell">
+                        <span class="mini-avatar">侯</span>
+                        <span class="member-meta"><strong>侯瑞妮</strong><small>reina.hou@atelier.com</small></span>
+                      </div>
+                    </td>
+                    <td><span class="badge warning">Invited</span></td>
+                    <td>财务支持</td>
+                    <td>尚未登录</td>
+                    <td><span class="ui-switch" role="switch" aria-checked="false" aria-label="双重验证未开启"></span></td>
+                    <td>
+                      <div class="table-actions">
+                        <button class="action-icon-btn" type="button" aria-label="复制邀请链接">
+                          <i data-lucide="copy" class="nav-icon"></i>
+                        </button>
+                        <button class="action-icon-btn" type="button" aria-label="撤回邀请">
+                          <i data-lucide="undo-2" class="nav-icon"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <div class="pagination-bar">
+            <p class="table-total-rows">显示第 1-4 条，共 46 条</p>
+            <nav class="pagination-nav" aria-label="分页">
+              <ul class="pagination-list">
+                <li>
+                  <button class="pagination-link is-prev" type="button" aria-label="转到上一页">
+                    <i data-lucide="chevron-left" class="nav-icon"></i>
+                    <span>上一页</span>
+                  </button>
+                </li>
+                <li><button class="pagination-link is-active" type="button" aria-current="page">1</button></li>
+                <li><button class="pagination-link" type="button">2</button></li>
+                <li><button class="pagination-link" type="button">3</button></li>
+                <li><span class="pagination-ellipsis" aria-hidden="true">...</span></li>
+                <li><button class="pagination-link" type="button">12</button></li>
+                <li>
+                  <button class="pagination-link is-next" type="button" aria-label="转到下一页">
+                    <span>下一页</span>
+                    <i data-lucide="chevron-right" class="nav-icon"></i>
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          </div>
+
+        </main>
+      </div>
+    </div>
+    <script>
+      (function () {
+        var menus = document.querySelectorAll('[data-action-menu]');
+
+        function setMenuOpen(menu, open) {
+          menu.classList.toggle('is-open', open);
+          var toggle = menu.querySelector('[data-action-menu-toggle]');
+          if (toggle) toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        }
+
+        menus.forEach(function (menu) {
+          var toggle = menu.querySelector('[data-action-menu-toggle]');
+          if (!toggle) return;
+          toggle.addEventListener('click', function (e) {
+            e.preventDefault();
+            var isOpen = menu.classList.contains('is-open');
+            menus.forEach(function (m) {
+              if (m !== menu) setMenuOpen(m, false);
+            });
+            setMenuOpen(menu, !isOpen);
+          });
+        });
+
+        document.addEventListener('click', function (e) {
+          var target = e.target;
+          if (!(target instanceof Element)) return;
+          menus.forEach(function (menu) {
+            if (!target.closest('[data-action-menu]')) setMenuOpen(menu, false);
+          });
+        });
+
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape') {
+            menus.forEach(function (menu) {
+              setMenuOpen(menu, false);
+            });
+          }
+        });
+      })();
+
+      lucide.createIcons();
+    </script>
+    <script src="./common.js"></script>
+  </body>
+</html>
