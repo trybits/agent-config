@@ -9,6 +9,7 @@ agent-config/
 ├── commands/       # 自定义 slash 命令
 ├── mcp/            # MCP 服务端配置
 │   ├── doubao-search-mcp/  # 火山豆包联网搜索 MCP（web_search，已发布 PyPI: doubao-search-mcp）
+│   ├── zhipu-glm-vision-mcp/  # 智谱 GLM-4.6V-Flash 多模态视觉 MCP（图片/视频/文件 + thinking，已发布 PyPI: zhipu-glm-vision-mcp）
 │   └── mimo-vision/        # 小米 MIMO 视觉分析 MCP 服务
 ├── rules/          # 编码规则 / 指南
 │   ├── backend/      # 后端规则（按语言/框架分子目录）
