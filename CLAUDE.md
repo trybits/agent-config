@@ -8,7 +8,8 @@
 agent-config/
 ├── commands/       # 自定义 slash 命令
 ├── mcp/            # MCP 服务端配置
-│   └── mimo-vision/  # 小米 MIMO 视觉分析 MCP 服务
+│   ├── doubao-search-mcp/  # 火山豆包联网搜索 MCP（web_search，已发布 PyPI: doubao-search-mcp）
+│   └── mimo-vision/        # 小米 MIMO 视觉分析 MCP 服务
 ├── rules/          # 编码规则 / 指南
 │   ├── backend/      # 后端规则（按语言/框架分子目录）
 │   └── frontend/     # 前端规则（按框架分子目录，如 react/）
