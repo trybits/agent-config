@@ -1,6 +1,6 @@
 # 官方文档抓取与转换说明
 
-本文记录 `docs/` 下三份 MiMo V2.5 能力文档（图片 / 音频 / 视频理解）的抓取与 Markdown 转换方法，便于日后重新抓取、验证内容准确性。
+本文记录 `docs/` 下 MiMo V2.5 能力文档（图片 / 音频 / 视频理解）与 OpenAI Chat Completions API 接口文档的抓取与 Markdown 转换方法，便于日后重新抓取、验证内容准确性。
 
 ## 源页面
 
@@ -9,6 +9,7 @@
 | 图片理解 | `https://mimo.mi.com/docs/zh-CN/quick-start/usage-guide/multimodal-understanding/image-understanding` |
 | 音频理解 | `https://mimo.mi.com/docs/zh-CN/quick-start/usage-guide/multimodal-understanding/audio-understanding` |
 | 视频理解 | `https://mimo.mi.com/docs/zh-CN/quick-start/usage-guide/multimodal-understanding/video-understanding` |
+| OpenAI Chat Completions API | `https://mimo.mi.com/docs/zh-CN/api/chat/openai-api` |
 
 ## 抓取（curl）
 
@@ -37,6 +38,17 @@ done
 - 多语言 Tab：`<mimo-tab><mimo-tab-item label="Python SDK">`（另有 Curl、Anthropic Messages API）
 - 内部链接：hash 路由形式 `https://mimo.mi.com/#/docs/…`
 
+### OpenAI Chat Completions API 页的差异
+
+`docs/api/chat/openai-api` 页与上述能力文档结构不同，转换脚本也需单独处理：
+
+- **参数定义**不在正文文本里，而是以 `<inline-schema-v2 schema="…">` 属性的转义 JSON 内嵌（`&#x22;` 等实体，需 `html.unescape` 后 `json.loads`），递归的 `children` 字段表示嵌套子字段。
+- **代码块**用 `<pre>` 纯文本（非 `raw` 属性），且部分示例代码位于 `mdxContent` 之外（如页面底部的 curl / JSON 示例），需用 `soup.find_all('pre')` 全局收集后按内容归属到各 section。示例 `pre` 会被响应式双栏布局渲染**两遍**（移动端 `block lg:hidden` + 桌面侧栏 `hidden lg:block`，内容相同），取第一份即可。
+- 描述文本内含 `<code>`、`<blockquote>`、`<ul>` 等标签：`code`→反引号、`blockquote`→压缩为单行、**`ul/li`→转多行子列表**（否则列表会被压平成粘连文本，反引号互相贴死，如 `131072``mimo-v2.5`）。
+- schema 的 **`defaultValue` 字段需渲染为「默认值 `…`」**：页面里 11 个参数带默认值（`top_p=0.95`、`fps=2`、`max_keyword/limit=5`、`stream=false` 等），不处理会整块丢失。
+- `mimo-tab-item` 的 **`label` 是语义信息**（认证方式 tab 的真实标签是 `API Key 鉴权` / `Bearer 鉴权`），需保留，不能硬编码成「认证方式 1/2」。
+- 两个响应对象小节（非流式/流式）补 `### 响应对象参数` 标题保持结构一致；流式小节页面本身没有示例代码（无 SSE chunk 示例），属正常。
+
 ## 转换（MDX HTML → Markdown）
 
 用 `html.parser.HTMLParser` 提取 `mdxContent`，按标签映射：
@@ -62,9 +74,10 @@ done
 
 ## 复现步骤
 
-1. 按上文 `curl` 抓取三个 HTML 到任意目录。
+1. 按上文 `curl` 抓取三个能力文档 HTML 到任意目录。
 2. 运行文末脚本，生成三个 `.md`。
-3. 核对内容，重点检查：**大小限制、支持格式、视频 `fps` / `media_resolution` 参数、FAQ**。
+3. OpenAI API 页（`openai-api.md`）结构不同，需按上文「OpenAI Chat Completions API 页的差异」另行解析（`inline-schema-v2` 的 `schema` 属性 + 全局 `pre`）。
+4. 核对内容，重点检查：**大小限制、支持格式、视频 `fps` / `media_resolution` 参数、FAQ**。
 
 ## 已知限制
 
