@@ -38,7 +38,8 @@ export const useUiStore = create<UiState>()(
     (set) => ({
       pageRulesOpen: false,
       rulePanelPos: { x: window.innerWidth - 96, y: window.innerHeight - 280 },
-      rulePanelSize: { w: 360, h: 420 },
+      // 默认宽 560：达到目录栏阈值 480（RulePanelFloat TOC_BREAKPOINT），打开即带左侧目录
+      rulePanelSize: { w: 560, h: 420 },
       setPageRulesOpen: (open) => set({ pageRulesOpen: open }),
       togglePageRules: () => set((state) => ({ pageRulesOpen: !state.pageRulesOpen })),
       setRulePanelPos: (pos) => set({ rulePanelPos: pos }),

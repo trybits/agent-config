@@ -16,19 +16,21 @@
 //   - 过渡只写 transition-[transform,box-shadow]，不写 left/top，否则拖拽延迟
 // ============================================================
 
-import { useState, useRef, useCallback, useEffect } from 'react'
+import { useState, useRef, useCallback, useEffect, useMemo } from 'react'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { usePageRule } from '@/hooks/usePageRule'
 import { useUiStore } from '@/store/ui'
 import type { RulePanelPos, RulePanelSize } from '@/store/ui'
 import { cn } from '@/lib/utils'
-import { MarkdownContent } from './MarkdownContent'
+import { MarkdownContent, extractHeadings } from './MarkdownContent'
 
 const BALL_SIZE = 64 // 悬浮球直径
 const PANEL_GAP = 12 // 面板与悬浮球间距
 const PANEL_MARGIN = 12 // 面板距视口边缘
 const MIN_PANEL_W = 280
 const MIN_PANEL_H = 200
+// 面板宽度达到该值时左侧显示目录栏（目录栏固定 180px，正文至少 500px），小于该值时纯正文
+const TOC_BREAKPOINT = 680
 
 /** Iconfont 图标（沿用项目内内联定义模式，也可改为项目全局图标组件） */
 function IconFont({ name, className = '' }: { name: string; className?: string }) {
@@ -82,6 +84,14 @@ export function RulePanelFloat() {
   const resizeSize = useRef({ w: 0, h: 0 })
   const ballRef = useRef<HTMLButtonElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
+  const contentRef = useRef<HTMLDivElement>(null)
+
+  // 目录：从 .md 提取 H2/H3/H4 标题；面板宽 >= TOC_BREAKPOINT 且有标题时显示左侧目录栏
+  // dragToc：拖拽调宽过程中实时跟随阈值（跨过阈值的瞬间切换目录），null = 未拖拽，按 store 尺寸计算
+  const headings = useMemo(() => extractHeadings(rule?.content ?? ''), [rule])
+  const [dragToc, setDragToc] = useState<boolean | null>(null)
+  const showToc = (dragToc ?? size.w >= TOC_BREAKPOINT) && headings.length > 0
+  const [activeHeading, setActiveHeading] = useState<string | null>(null)
 
   // 悬浮球拖拽开始
   const handleBallMouseDown = useCallback(
@@ -157,9 +167,10 @@ export function RulePanelFloat() {
     [size]
   )
 
-  // 调整尺寸：直接改 DOM style，松手一次性提交 store
+  // 调整尺寸：直接改 DOM style 跟手；宽度跨过目录阈值时实时切换目录（仅阈值瞬间触发一次渲染）
   useEffect(() => {
     if (!resizing) return
+    let prevW = size.w // 起始宽度，用于检测是否跨过目录阈值
     const onMove = (e: MouseEvent) => {
       const dx = e.clientX - resizeStart.current.x
       const dy = e.clientY - resizeStart.current.y
@@ -170,6 +181,11 @@ export function RulePanelFloat() {
         h: Math.max(MIN_PANEL_H, Math.min(resizeStart.current.h + dy, maxH)),
       }
       resizeSize.current = next
+      // 跨过 TOC_BREAKPOINT 的瞬间实时切换目录（一次渲染即可，不影响后续跟手）
+      if ((next.w >= TOC_BREAKPOINT) !== (prevW >= TOC_BREAKPOINT)) {
+        setDragToc(next.w >= TOC_BREAKPOINT)
+      }
+      prevW = next.w
       if (panelRef.current) {
         const style = getPanelStyle(pos, next)
         panelRef.current.style.width = `${style.width}px`
@@ -180,6 +196,7 @@ export function RulePanelFloat() {
     }
     const onUp = () => {
       setResizing(false)
+      setDragToc(null) // 恢复正常计算（store 已提交新尺寸）
       setSize(resizeSize.current)
     }
     document.addEventListener('mousemove', onMove)
@@ -191,6 +208,47 @@ export function RulePanelFloat() {
       document.body.style.userSelect = ''
     }
   }, [resizing, pos, setSize])
+
+  // 计算当前滚动位置对应的标题并高亮：高亮「视口顶部的章节」——第一个下边缘还留在
+  // 容器顶部以下的标题。不用「顶到顶部」判定——短章节/滚到底时滚动条被钳制，
+  // 标题无法顶到顶部会导致高亮停在上一章（错位）
+  const computeActiveHeading = useCallback(() => {
+    const container = contentRef.current
+    if (!container) return
+    const top = container.getBoundingClientRect().top
+    const nodes = container.querySelectorAll<HTMLElement>('[data-prd-h]')
+    let active: string | null = null
+    for (const n of nodes) {
+      if (n.getBoundingClientRect().bottom > top) {
+        active = n.id
+        break
+      }
+    }
+    // 全部标题已滚出视口（滚动到最后一个章节之后）→ 兜底高亮最后一个
+    if (!active && nodes.length > 0) active = nodes[nodes.length - 1].id
+    setActiveHeading(active)
+  }, [])
+
+  // 目录高亮跟随：内容区滚动时重算；目录显示切换/面板尺寸变化/标题变化时也重算一次
+  useEffect(() => {
+    const container = contentRef.current
+    if (!container) return
+    computeActiveHeading()
+    container.addEventListener('scroll', computeActiveHeading, { passive: true })
+    return () => container.removeEventListener('scroll', computeActiveHeading)
+  }, [computeActiveHeading, showToc, size, headings])
+
+  // 点击目录项：平滑滚动到对应标题（手动算目标位，确保滚动发生在内容区容器内）
+  // 注意：锚点定位按 id 属性匹配（data-prd-h 是无值标记，不能按值匹配）
+  const scrollToHeading = useCallback((id: string) => {
+    const container = contentRef.current
+    if (!container) return
+    const node = container.querySelector<HTMLElement>(`#${id}`)
+    if (!node) return
+    setActiveHeading(id) // 乐观高亮点击项，避免滚动动画结束无 scroll 事件时高亮滞留
+    const top = node.getBoundingClientRect().top - container.getBoundingClientRect().top + container.scrollTop
+    container.scrollTo({ top: top - 8, behavior: 'smooth' })
+  }, [])
 
   // 移动端（<768px）或当前页面无规则时不渲染
   if (isMobile || !rule) return null
@@ -240,8 +298,32 @@ export function RulePanelFloat() {
               <IconFont name="cebianlanshouqi" className="size-4" />
             </button>
           </div>
-          <div className="min-h-0 flex-1 overflow-y-auto px-4 py-3">
-            <MarkdownContent content={rule.content} />
+          {/* 主体：左侧目录栏（宽 >= TOC_BREAKPOINT 时显示，固定 180px）+ 内容区 */}
+          <div className="flex min-h-0 flex-1">
+            {showToc && (
+              <aside className="w-[180px] shrink-0 overflow-y-auto border-r border-border-subtle bg-muted/20 px-2 py-3">
+                <div className="mb-2 px-1 text-xs font-medium text-text-secondary">目录</div>
+                <nav>
+                  {headings.map((h) => (
+                    <button
+                      key={h.id}
+                      onClick={() => scrollToHeading(h.id)}
+                      className={cn(
+                        'block w-full truncate rounded px-1 py-0.5 text-left text-xs leading-relaxed transition-colors',
+                        h.level === 2 ? 'font-medium text-text-title' : 'text-text-primary',
+                        activeHeading === h.id ? 'bg-primary/10 text-primary' : 'hover:bg-muted'
+                      )}
+                      style={{ paddingLeft: 4 + (h.level - 2) * 12 }}
+                    >
+                      {h.text}
+                    </button>
+                  ))}
+                </nav>
+              </aside>
+            )}
+            <div ref={contentRef} className="min-h-0 flex-1 overflow-y-auto px-4 py-3">
+              <MarkdownContent content={rule.content} />
+            </div>
           </div>
           {/* 右下角尺寸调整手柄 */}
           <div
