@@ -26,7 +26,7 @@ pnpm add react-markdown remark-gfm
 | 1 | `src/store/ui.ts` | `ui-store.ts` | 全局 UI store（位置/尺寸/展开状态，persist） |
 | 2 | `src/config/page-rules/index.ts` | `page-rules-registry.md` | 类型 + 注册表 + `getPageRule` 匹配 |
 | 3 | `src/config/page-rules/<domain>.ts` | `page-rules-registry.md` | 领域注册文件（每领域一个，如 management-center.ts） |
-| 4 | `src/config/page-rules/content/*.md` | 新建 | 规则内容（写作规范见 `../rule-writing-guide.md`；范例见本仓库 `src/config/page-rules/content/scene-management.md`） |
+| 4 | `src/config/page-rules/content/*.md` | 新建 | 规则内容（结构与写作规范见 `../rule-writing-guide.md`，含需求批次外壳模板；注意存量文档可能为旧格式，新增需求按新结构插入） |
 | 5 | `src/hooks/usePageRule.ts` | `page-rules-registry.md` | `useLocation` → 规则条目 |
 | 6 | `src/components/page-rules/MarkdownContent.tsx` | `MarkdownContent.tsx` | react-markdown 渲染器 |
 | 7 | `src/components/page-rules/RulePanelFloat.tsx` | `RulePanelFloat.tsx` | 悬浮球 + 面板（核心组件） |
@@ -67,5 +67,6 @@ export default function Layout() {
 - [ ] 面板右下角拖拽调宽高（最小 280×200，不超出视口）
 - [ ] 刷新页面：球位置、面板尺寸、展开状态保留
 - [ ] 滚动页面：球不遮挡操作入口，且不被顶部导航遮挡
-- [ ] Markdown 内容正确渲染（标题层级、列表、代码块、GFM 表格）
+- [ ] Markdown 内容正确渲染（H1–H4 标题层级、列表、代码块、GFM 表格）
+- [ ] 有图片的页面：图片正常显示且不撑破面板（max-width 约束生效）
 - [ ] 窗口 <768px：悬浮球不渲染，页面与改造前一致

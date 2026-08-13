@@ -15,6 +15,8 @@ const components: Components = {
   h1: ({ children }) => <h1 className="text-lg font-semibold text-text-title mt-4 mb-2">{children}</h1>,
   h2: ({ children }) => <h2 className="text-base font-medium text-text-title mt-5 mb-2">{children}</h2>,
   h3: ({ children }) => <h3 className="text-sm font-medium text-text-title mt-4 mb-1.5">{children}</h3>,
+  // h4：需求文档「当前页面说明」下的九维度章节标题（见 rule-writing-guide.md 结构规范）
+  h4: ({ children }) => <h4 className="text-[13px] font-medium text-text-title mt-3 mb-1">{children}</h4>,
   p: ({ children }) => <p className="text-[13px] leading-relaxed text-text-primary my-2">{children}</p>,
   ul: ({ children }) => <ul className="list-disc pl-5 my-2 space-y-1">{children}</ul>,
   ol: ({ children }) => <ol className="list-decimal pl-5 my-2 space-y-1">{children}</ol>,
@@ -41,6 +43,11 @@ const components: Components = {
   ),
   blockquote: ({ children }) => (
     <blockquote className="border-l-2 border-primary pl-3 my-2 text-text-secondary">{children}</blockquote>
+  ),
+  // 图片：需求文档中仅允许 public 绝对路径引用（见 rule-writing-guide.md「图片引用规范」），
+  // 这里约束 max-width 防止撑破面板
+  img: ({ src, alt }) => (
+    <img src={src} alt={alt} className="my-2 max-w-full rounded-md border border-border" />
   ),
   table: ({ children }) => <table className="w-full text-xs my-2 border-collapse">{children}</table>,
   th: ({ children }) => (
