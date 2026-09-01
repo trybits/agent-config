@@ -86,7 +86,7 @@ export function RulePanelFloat() {
   const panelRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
 
-  // 目录：从 .md 提取 H2/H3/H4 标题；面板宽 >= TOC_BREAKPOINT 且有标题时显示左侧目录栏
+  // 目录：从 .md 提取 H2/H3/H4/H5 标题；面板宽 >= TOC_BREAKPOINT 且有标题时显示左侧目录栏
   // dragToc：拖拽调宽过程中实时跟随阈值（跨过阈值的瞬间切换目录），null = 未拖拽，按 store 尺寸计算
   const headings = useMemo(() => extractHeadings(rule?.content ?? ''), [rule])
   const [dragToc, setDragToc] = useState<boolean | null>(null)

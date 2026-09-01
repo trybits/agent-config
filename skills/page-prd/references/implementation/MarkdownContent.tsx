@@ -14,7 +14,7 @@ import { cn } from '@/lib/utils'
 /** 目录项：由 extractHeadings 与渲染锚点共用，id 用源文档行号生成（prd-h-<line>，1 起），天然幂等 */
 export interface HeadingItem {
   id: string
-  level: 2 | 3 | 4
+  level: 2 | 3 | 4 | 5
   text: string
 }
 
@@ -28,12 +28,12 @@ function cleanHeadingText(raw: string): string {
 }
 
 /**
- * 从 .md 原文提取 H2/H3/H4 标题生成目录（H1 页面名不进目录——面板头部已显示标题）。
- * id = 标题所在行号（1 起），与渲染锚点（mdast position.start.line）同源，重渲染不漂移。
+ * 从 .md 原文提取 H2/H3/H4/H5 标题生成目录（H1 页面名与 H6 子项不进目录——H1 已显示在面板头部，
+ * H6 缩进过深、保持目录简洁）。id = 标题所在行号（1 起），与渲染锚点同源。
  */
 export function extractHeadings(content: string): HeadingItem[] {
   const items: HeadingItem[] = []
-  const re = /^(#{2,4})\s+(.+)$/gm
+  const re = /^(#{2,5})\s+(.+)$/gm
   let m: RegExpExecArray | null
   while ((m = re.exec(content))) {
     const line = content.slice(0, m.index).split('\n').length
@@ -59,11 +59,23 @@ const components: Components = {
       {children}
     </h3>
   ),
-  // h4：需求文档「当前页面说明」下的九维度章节标题（见 rule-writing-guide.md 结构规范）
+  // h4：业务模块章节标题（如「页面布局概览」「数据表格区」「评级弹窗」等，见 rule-writing-guide.md 结构规范）
   h4: ({ children, node }) => (
     <h4 id={`prd-h-${node?.position?.start.line ?? 0}`} data-prd-h className="text-[13px] font-medium text-text-title mt-3 mb-1">
       {children}
     </h4>
+  ),
+  // h5：表格/弹窗内子项（如评级弹窗内「3.3.1. 本次评价」下的子项），与 H4 视觉接近但更次级
+  h5: ({ children, node }) => (
+    <h5 id={`prd-h-${node?.position?.start.line ?? 0}`} data-prd-h className="text-[13px] font-medium text-text-primary mt-2 mb-0.5">
+      {children}
+    </h5>
+  ),
+  // h6：操作项/二级子项（如「3.2.4.1. 智能体名称点击」），不进目录但支持锚点跳转与样式
+  h6: ({ children, node }) => (
+    <h6 id={`prd-h-${node?.position?.start.line ?? 0}`} data-prd-h className="text-[13px] font-normal text-text-primary mt-1.5 mb-0.5">
+      {children}
+    </h6>
   ),
   p: ({ children }) => <p className="text-[13px] leading-relaxed text-text-primary my-2">{children}</p>,
   ul: ({ children }) => <ul className="list-disc pl-5 my-2 space-y-1">{children}</ul>,
