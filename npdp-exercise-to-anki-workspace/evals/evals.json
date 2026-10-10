@@ -1,0 +1,19 @@
+{
+  "skill_name": "npdp-exercise-to-anki",
+  "evals": [
+    {
+      "id": 0,
+      "name": "restore-chapter-1",
+      "prompt": "把 docs/npdp/exercise/chapter-1.md 这个题库做成能导入 Anki 的结构化数据。我已经按 templates/mcq 建好笔记类型了，要能直接导入刷题。",
+      "expected_output": "一份 51 行 × 17 列的 TSV，与仓库里已提交的 chapter-1.tsv 逐字一致；配套一份 fixes 文件覆盖 7 处坏解析与 3 组近似重复",
+      "files": ["inputs/chapter-1.md"]
+    },
+    {
+      "id": 1,
+      "name": "unknown-format",
+      "prompt": "这是我买的 NPDP 模拟题第一套，想导进 Anki 刷。文件在 mock-exam-1.md。",
+      "expected_output": "先识别出这份文档格式与 chapter-1 不同（题号是 **1.** 而非 1、、选项是 A. 而非 A：），如实报告差异与需要改代码的地方，而不是硬套现有解析器产出错数据",
+      "files": ["inputs/mock-exam-1.md"]
+    }
+  ]
+}

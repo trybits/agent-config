@@ -1,0 +1,54 @@
+{
+  "checks": [
+    {
+      "text": "产出 TSV 存在",
+      "passed": true,
+      "evidence": "D:/TraeFile/agent-config/skills/npdp-exercise-to-anki-workspace/iteration-1/restore-chapter-1/with_skill/outputs/chapter-1.tsv"
+    },
+    {
+      "text": "TSV 恰好 51 行（去重后题数正确）",
+      "passed": true,
+      "evidence": "实际 51 行"
+    },
+    {
+      "text": "每行恰好 17 列",
+      "passed": true,
+      "evidence": "行列数异常：[]"
+    },
+    {
+      "text": "产出里没有多余的行（如表头行）",
+      "passed": true,
+      "evidence": ""
+    },
+    {
+      "text": "id 集合与基准一致",
+      "passed": true,
+      "evidence": "多出 []，缺少 []"
+    },
+    {
+      "text": "重复题 31/46/52 已去掉",
+      "passed": true,
+      "evidence": "仍存在：[]"
+    },
+    {
+      "text": "id/题干/选项/答案/来源 九列与基准逐字一致",
+      "passed": true,
+      "evidence": ""
+    },
+    {
+      "text": "未受缺陷影响题的 note/noteX 与基准逐字一致",
+      "passed": true,
+      "evidence": ""
+    },
+    {
+      "text": "坏解析片段没有错位进某个选项的解析",
+      "passed": true,
+      "evidence": ""
+    },
+    {
+      "text": "受影响题的 note 非空（修复生效而非清空）",
+      "passed": true,
+      "evidence": ""
+    }
+  ]
+}
