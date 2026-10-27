@@ -1,13 +1,15 @@
 // ============================================================
 // Markdown 渲染器（react-markdown + GFM）—— 跨项目实现模板
 // 复制到目标项目：src/components/page-rules/MarkdownContent.tsx
-// 依赖：react-markdown ^10 + remark-gfm ^4（pnpm add react-markdown remark-gfm）
+// 依赖：react-markdown ^10 + remark-gfm ^4 + rehype-raw ^7（pnpm add react-markdown remark-gfm rehype-raw）
 //   注意：react-markdown 是 ESM-only 包，必须显式传 remarkPlugins=[remarkGfm]，否则表格不渲染
+//   rehype-raw 用于渲染原始 HTML（如表格单元格内 <br> 换行）；需求文档为项目内置受信内容，无需再消毒
 //   语义色变量说明见 RulePanelFloat.tsx 顶部注释；无变量时替换为等价 Tailwind 色值
 // ============================================================
 
 import { memo } from 'react'
 import ReactMarkdown, { type Components } from 'react-markdown'
+import rehypeRaw from 'rehype-raw'
 import remarkGfm from 'remark-gfm'
 import { cn } from '@/lib/utils'
 
@@ -128,7 +130,7 @@ const components: Components = {
  */
 export const MarkdownContent = memo(function MarkdownContent({ content }: { content: string }) {
   return (
-    <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
+    <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} components={components}>
       {content}
     </ReactMarkdown>
   )

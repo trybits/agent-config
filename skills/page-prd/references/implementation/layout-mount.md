@@ -5,11 +5,12 @@
 ## 0. 依赖安装
 
 ```bash
-pnpm add react-markdown remark-gfm
+pnpm add react-markdown remark-gfm rehype-raw
 ```
 
 - `react-markdown` ^10（React 18+，自带类型，ESM-only——Vite 下无问题）
 - `remark-gfm`（GFM 表格/删除线/任务列表；**必须显式传 `remarkPlugins=[remarkGfm]`，否则表格不渲染为表格**）
+- `rehype-raw`（渲染原始 HTML，如表格单元格内 `<br>` 换行；需求文档为项目内置受信内容，无需再消毒）
 - 若项目无 zustand：`pnpm add zustand`，或按 `ui-store.ts` 顶部注释改用 localStorage 直写
 
 ## 1. 前置检查（tsconfig / 样式变量）
