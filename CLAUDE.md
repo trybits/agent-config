@@ -19,7 +19,7 @@ agent-config/
 │   ├── agnes-image-api/   # agens的图片生成技能
 │   ├── build-permission/  # 构建权限技能
 │   ├── drawio/            # DrawIO 图表绘制技能
-│   ├── git-stage-commit-push/  # Git 暂存-提交-推送技能
+│   ├── git-stage-commit-push/  # Git 暂存-提交技能（默认不推送）
 │   ├── prd-writer/        # PRD 需求文档编写技能
 │   ├── prototype-design/  # 原型设计技能
 │   └── rule-creator/      # 规则创建技能
